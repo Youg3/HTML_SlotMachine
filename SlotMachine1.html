@@ -43,7 +43,7 @@
 	var credits; //game tokens
 	var gameTokensText; //screen text
 	var tumblersSpinning = false; //to not allow lever to be pulled when spinning
-	
+	var music;
 
 	var number1;//maybe random numbers
 	var number2;
@@ -55,7 +55,7 @@
 		function preload() 
 		{
 			//load game assets here
-			this.load.audio('background', 'assets/loop_smooth_jazz.mp3');
+			this.load.audio('backgroundAudio', 'assets/loop_smooth_jazz.mp3');
 
 		}
 
@@ -63,15 +63,23 @@
 		{
 			//create game sprites here, set anchor points etc.
 
-			var music = this.sound.add('background');
+			music = this.sound.add('backgroundAudio');
 
 			music.play();
+			//game token text
+			gameTokensText = this.add.text(16, 16, 'Tokens 0', { fontSize: '32px', fill: '#FFF' });
+
+			this.input.on('pointerDown',
+				function(pointer) {
+					console.log('down');
+				});
+
 		}
 
 		function update() 
 		{
-		//update canvas here
-		
+			//update canvas here
+
 		}
 
 </script>
