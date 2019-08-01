@@ -37,6 +37,7 @@
 
 	var player;
 	var platforms;
+	var stars;
 	var cursors;
 
 	var jumpValue = -330;
@@ -68,6 +69,18 @@
 		platforms.create(50, 250, 'ground');
 		platforms.create(750, 220, 'ground');
 
+		//create stars group
+		stars = this.physics.add.group({
+			key: 'star',
+			repeat: 11, //creates a total of 12 child objects
+			setXY: { x: 12, y: 0, stepX: 70 } //places stars at stepX:70 apart from each other with first at x:12, second x:82 etc..
+		});
+
+		stars.children.iterate(function(child) //iterate through all children of group and randomly assign a y value
+		{
+			child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+		});
+
 
 		player = this.physics.add.sprite(100, 450, 'dude'); //create sprite called player as a dynamic body
 
@@ -94,6 +107,8 @@
 		});
 		
 		this.physics.add.collider(player, platforms); //sets the collision between player and platform
+		this.physics.add.collider(stars, platforms); //collision check with stars and platforms
+		this.phyics.add.overlap(player, stars, collectStar, null, this); //check if player overlaps star and call collectStar func
 
 		cursors = this.input.keyboard.createCursorKeys(); //populate cursor object with up, down, left, right
 	}
@@ -117,7 +132,12 @@
 		{
 			player.setVelocityY(jumpValue);
 		}
+		
+	}
 
+	function collectStar(player, star) 
+	{
+		star.disableBody(true, true); //disable game object child star that has overlapped with player
 	}
 
 	
