@@ -1,42 +1,69 @@
 ﻿<!DOCTYPE html>
+<html lang="en">
 
-<html>
 <head>
-
-	<meta charset="utf-8"/>
-	<title>Phaser:IO SlotMachine 1</title>
-	
-	<style type = "text/css" media="screen">
-		body { background-color: #AAAAAA;}
-		body{ margin: 0px; padding: 0;}
-		canvas { background-color: #FFFFFF;}
+	<meta charset="UTF-8"/>
+	<title>SlotMachine-1</title>
+	<script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
+	<style type="text/css">
+		body {margin: 0;}
 	</style>
-	
-	<script src="js/phaser.min.js" type="text/javascript"/>
-	
-	<script>
+</head>
+<body>
 
-		var game = new Phaser.Game(1024,768, Phaser.CANVAS, 'Slot-Machine_1',
-			{ preload: preload, create: create, update: update })
+<script type="text/javascript">
 
-		function preload() {
+	var config=
+	{
+		type: Phaser.AUTO, //set to AUTO to allow for attempted use of WebGL if browser allows
+		width: 800, //canvas sizes
+		height: 600, //cs
+
+		physics: { //tell Phaser to use physics
+			default: 'arcade',
+			arcade: {
+				gravity: {y: 300}, //global gravity
+				debug: false
+			}
+		},
+
+		scene: 
+		{
+			preload: preload,
+			create: create,
+			update: update
+		}
+	};
+	
+	//variables
+	var credits; //game tokens
+	var gameTokensText; //screen text
+	var tumblersSpinning = false; //to not allow lever to be pulled when spinning
+
+
+
+	var number1;//maybe random numbers
+	var number2;
+	var number3;
+
+
+	var game = new Phaser.Game(config); //instance assigned to local variable 'game'
+
+		function preload() 
+		{
 		//load game assets here
 		}
 
-		function create() {
+		function create() 
+		{
 		//create game sprites here, set anchor points etc.
 		}
 
-		function update() {
+		function update() 
+		{
 		//update canvas here
 
 		}
 
-
-
-	</script>
-
-
-
-</head>
+</script>
 </html>
