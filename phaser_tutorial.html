@@ -108,9 +108,11 @@
 		
 		this.physics.add.collider(player, platforms); //sets the collision between player and platform
 		this.physics.add.collider(stars, platforms); //collision check with stars and platforms
-		this.phyics.add.overlap(player, stars, collectStar, null, this); //check if player overlaps star and call collectStar func
 
 		cursors = this.input.keyboard.createCursorKeys(); //populate cursor object with up, down, left, right
+
+		this.physics.add.overlap(player, stars, collectStar, null, this); //check if player overlaps star and call collectStar func
+
 	}
 
 	function update() 
