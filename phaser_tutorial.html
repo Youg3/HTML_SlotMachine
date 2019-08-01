@@ -41,6 +41,7 @@
 	var bombs;
 	var score = 0;
 	var scoreText;
+	var gameOverText;
 	var gameOver = false;
 	
 	//input
@@ -180,6 +181,8 @@
 		player.anims.play('turn');
 
 		gameOver = true;
+
+		gameOverText = this.add.text(300,300,'Game Over',{ fontSize: '40px', fill: '#000' });
 	}
 	
 </script>
