@@ -16,9 +16,18 @@
 <script type="text/javascript">
 
 	var config = {
-		type: Phaser.AUTO,
-		width: 800,
-		height: 600,
+		type: Phaser.AUTO, //set to AUTO to allow for attempted use of WebGL if browser allows
+		width: 800, //canvas sizes
+		height: 600, //cs
+
+		physics: { //tell Phaser to use physics
+			default: 'arcade',
+			arcade: {
+				gravity: {y: 300},
+				debug: false
+			}
+		},
+
 		scene: {
 			preload: preload,
 			create: create,
@@ -26,14 +35,31 @@
 		}
 	};
 
-	var game = new Phaser.Game(config);
+	var game = new Phaser.Game(config); //instance assigned to local variable 'game'
 
-	function preload() {
-		
+	function preload() //load assets for the game
+	{
+		this.load.image('sky', 'assets/tutorial/sky.png');
+		this.load.image('ground', 'assets/tutorial/platform.png');
+		this.load.image('star', 'assets/tutorial/star.png');
+		this.load.image('bomb', 'assets/tutorial/bomb.png');
+		this.load.spritesheet('dude',
+			'assets/tutorial/dude.png',
+			{frameWidth:32, frameHeight:48});
 	}
 
-	function create() {
-			
+	function create() { //order in which images are created is the order in which they are drawn on screen.  Background image should always go first
+		this.add.image(400, 300, 'sky'); //in phaser 3 all game objects are positioned based on their centre by default
+		//this.add.image(400, 300, 'star'); //star at screen centre
+
+		platforms = this.physics.add.staticGroup();
+
+		platforms.create(400, 568, 'ground').setScale(2).refreshBody(); //floor scaled to x2
+
+		platforms.create(600, 400, 'ground');
+		platforms.create(50, 250, 'ground');
+		platforms.create(750, 220, 'ground');
+
 	}
 
 	function update() {
