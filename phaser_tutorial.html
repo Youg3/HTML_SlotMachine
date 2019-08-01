@@ -52,14 +52,42 @@
 		this.add.image(400, 300, 'sky'); //in phaser 3 all game objects are positioned based on their centre by default
 		//this.add.image(400, 300, 'star'); //star at screen centre
 
-		platforms = this.physics.add.staticGroup();
+		platforms = this.physics.add.staticGroup(); //creates a static grouping so that they wont move based on arcade physics
 
-		platforms.create(400, 568, 'ground').setScale(2).refreshBody(); //floor scaled to x2
+		platforms.create(400, 568, 'ground').setScale(2).refreshBody(); //floor scaled to x2. Must be refreshed to inform physics of the change in size
 
 		platforms.create(600, 400, 'ground');
 		platforms.create(50, 250, 'ground');
 		platforms.create(750, 220, 'ground');
 
+
+
+		player = this.physics.add.sprite(100, 450, 'dude'); //create sprite called player as a dynamic body
+
+		player.setBounce(0.2); //slight landing bounce value
+		player.setColliderWorldBounds(true); //collide with the world bounds (800x600)
+
+
+		//create multiple use animations which can be applied to as many game objects as wanted (phaser 3 improvement)
+		this.anims.create({ //animation for left movement
+			key: 'left',
+			frames: this.anims.generateFrameNumbers('dude',{ start:0, end:3}), //sets sprites from sheet
+			frameRate: 10, //speed of movement
+			repeat: -1 //loop animation
+		});
+
+		this.anims.create({ //animation for right movement
+			key: 'right',
+			frames: this.anims.generateFrameNumbers('dude',{ start:5, end:8}),
+			frameRate: 10,
+			repeat: -1
+		});
+
+		this.anims.create({
+			key: 'turn',
+			frames: [{key: 'dude', frame: 4}],
+			frameRate:20
+		});
 	}
 
 	function update() {
