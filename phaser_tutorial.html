@@ -15,7 +15,7 @@
 
 <script type="text/javascript">
 
-/*	var config = {
+	var config = {
 		type: Phaser.AUTO, //set to AUTO to allow for attempted use of WebGL if browser allows
 		width: 800, //canvas sizes
 		height: 600, //cs
@@ -26,19 +26,7 @@
 				gravity: {y: 300}, //global gravity
 				debug: false
 			}
-		},*/
-
-var config = {
-	type: Phaser.AUTO,
-	width: 800,
-	height: 600,
-	physics: {
-		default: 'arcade',
-		arcade: {
-			gravity: { y: 300 },
-			debug: false
-		}
-	},
+		},
 
 		scene: {
 			preload: preload,
@@ -49,6 +37,10 @@ var config = {
 
 	var player;
 	var platforms;
+	var cursors;
+
+	var jumpValue = -330;
+
 	
 	var game = new Phaser.Game(config); //instance assigned to local variable 'game'
 
@@ -102,10 +94,29 @@ var config = {
 		});
 		
 		this.physics.add.collider(player, platforms); //sets the collision between player and platform
-		
+
+		cursors = this.input.keyboard.createCursorKeys(); //populate cursor object with up, down, left, right
 	}
 
-	function update() {
+	function update() 
+	{
+		//movement checks
+		if (cursors.left.isDown) {
+			player.setVelocityX(-160);
+			player.anims.play('left', true);
+		}
+		else if (cursors.right.isDown) {
+			player.setVelocityX(160)
+			player.anims.play('right', true);
+		} else {
+			player.setVelocityX(0);
+			player.anims.play('turn');
+		}
+
+		if (cursors.up.isDown && player.body.touching.down) //check if up button is pressed and player is on the ground to stop midair jumps
+		{
+			player.setVelocityY(jumpValue);
+		}
 
 	}
 
