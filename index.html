@@ -52,6 +52,19 @@
 		logo.setCollideWorldBounds(true);
 
 		emitter.startFollow(logo);
+
+		var star = this.add.sprite(400, 300, 'logo').setInteractive;
+
+		star.on('pointerdown',
+			function() {
+				console.log('clicked');
+			});
+
+		star.on('pointerup',
+			function() {
+				console.log('unclicked');
+			});
+
 	}
 </script>
 
