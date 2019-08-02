@@ -40,8 +40,9 @@
 	};
 
 	//variables
-	var credits; //game tokens
+	var credits = 100; //game tokens
 	var gameTokensText; //screen text
+	var jackpotAmount = 500;
 	var tumblersSpinning = false; //to not allow lever to be pulled when spinning
 	var music;
 
@@ -51,6 +52,10 @@
 	var number2Text;
 	var number3;
 	var number3Text;
+
+
+	var gameOverText;
+	var gameOver = false;
 
 	var mouse;
 
@@ -91,6 +96,8 @@
 
 		//game.canvas.addEventListener('mouseDown', function(event) { console.log('down'); });
 
+		mouse = this.input.keyboard.createCursorKeys();
+
 	}
 
 	function update() 
@@ -99,6 +106,26 @@
 		number1Text.setText(number1);
 		number2Text.setText(number2);
 		number3Text.setText(number3);
+
+		gameTokensText.setText('Tokens: ' + credits);
+
+		if (mouse.up.isDown) 
+		{
+			console.log('pressed');
+			pullLever();
+		}
+
+		if (credits === 0) {
+			console.log('endgame called');
+			//endGame();
+		}
+
+		if (number1 === number2 && number1 === number3) {
+			console.log('jackpot');
+			credits += jackpotAmount;
+			gameTokensText.setText('Tokens: ' + credits);
+		}
+
 
 	}
 
@@ -109,7 +136,16 @@
 		number2 = Phaser.Math.Between(1, 9);
 		number3 = Phaser.Math.Between(1, 9);
 		console.log(number1, number2, number3);
-		
+
+		credits -= 1;
+
+	}
+
+	function endGame() 
+	{
+		gameTokensText.setText('Tokens: ' + credits);
+		gameOver = true;
+		gameOverText = this.add.text(300,300,'Game Over',{ fontSize: '40px', fill: '#000' });
 	}
 
 </script>
