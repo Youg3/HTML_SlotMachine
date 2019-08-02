@@ -65,6 +65,7 @@
 	function preload() {
 		//load game assets here
 		this.load.audio('backgroundAudio', 'assets/loop_smooth_jazz.mp3');
+		this.load.image('star', 'assets/tutorial/star.png');
 
 	}
 
@@ -74,6 +75,18 @@
 		var music = this.sound.add('backgroundAudio');
 		var musicLoop = this.sound.add('backgroundAudio', {loop: true});
 		let loopDelay = undefined;
+
+		var star = this.add.sprite(400, 300, 'star').setInteractive;
+
+		star.on('pointerdown',
+			function() {
+				console.log('clicked');
+			});
+
+		star.on('pointerup',
+			function() {
+				console.log('unclicked');
+			});
 
 		music.on('play',() => {
 
