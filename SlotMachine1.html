@@ -11,6 +11,8 @@
 </head>
 <body>
 
+<button onclick="pullLever()">Pull Lever </button>
+
 <script type="text/javascript">
 
 	var config =
@@ -44,8 +46,7 @@
 	var gameTokensText; //screen text
 	var jackpotAmount = 500;
 	var tumblersSpinning = false; //to not allow lever to be pulled when spinning
-	var music;
-
+	
 	var number1; //random number values
 	var number1Text;
 	var number2;
@@ -70,9 +71,23 @@
 	function create() {
 		//create game sprites here, set anchor points etc.
 
-		music = this.sound.add('backgroundAudio');
+		var music = this.sound.add('backgroundAudio');
+		var musicLoop = this.sound.add('backgroundAudio', {loop: true});
+		let loopDelay = undefined;
 
-		music.play();
+		music.on('play',() => {
+
+			loopDelay = this.time.delayedCall(300,
+				() => {
+					musicLoop.play();
+				});
+		});
+
+//		if (this.sound.context.state === 'running') {
+//			music.play();
+//		}
+
+
 		//game token text
 		gameTokensText = this.add.text(16, 16, 'Tokens 0', { fontSize: '32px', fill: '#FFF' });
 
@@ -97,6 +112,15 @@
 		//game.canvas.addEventListener('mouseDown', function(event) { console.log('down'); });
 
 		mouse = this.input.keyboard.createCursorKeys();
+
+		this.events.on('PlayMusic', ()=>
+		{
+			loopDelay.destroy();
+			musicLoop.stop();
+			music.stop();
+			music.play();
+		});
+
 
 	}
 
