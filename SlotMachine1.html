@@ -6,7 +6,7 @@
 	<title>SlotMachine-1</title>
 	<script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
 	<style type="text/css">
-		body {margin: 0;}
+		body { margin: 0; }
 	</style>
 </head>
 <body>
@@ -38,49 +38,79 @@
 		}
 
 	};
-	
+
 	//variables
 	var credits; //game tokens
 	var gameTokensText; //screen text
 	var tumblersSpinning = false; //to not allow lever to be pulled when spinning
 	var music;
 
-	var number1;//maybe random numbers
+	var number1; //random number values
+	var number1Text;
 	var number2;
+	var number2Text;
 	var number3;
+	var number3Text;
 
+	var mouse;
 
 	var game = new Phaser.Game(config); //instance assigned to local variable 'game'
 
-		function preload() 
-		{
-			//load game assets here
-			this.load.audio('backgroundAudio', 'assets/loop_smooth_jazz.mp3');
+	function preload() {
+		//load game assets here
+		this.load.audio('backgroundAudio', 'assets/loop_smooth_jazz.mp3');
 
-		}
+	}
 
-		function create() 
-		{
-			//create game sprites here, set anchor points etc.
+	function create() {
+		//create game sprites here, set anchor points etc.
 
-			music = this.sound.add('backgroundAudio');
+		music = this.sound.add('backgroundAudio');
 
-			music.play();
-			//game token text
-			gameTokensText = this.add.text(16, 16, 'Tokens 0', { fontSize: '32px', fill: '#FFF' });
+		music.play();
+		//game token text
+		gameTokensText = this.add.text(16, 16, 'Tokens 0', { fontSize: '32px', fill: '#FFF' });
 
-			this.input.on('pointerDown',
-				function(pointer) {
-					console.log('down');
-				});
+		//random numbers generation
+		number1 = Phaser.Math.Between(1, 9);
+		console.log(number1);
+		number2 = Phaser.Math.Between(1, 9);
+		console.log(number2);
+		number3 = Phaser.Math.Between(1, 9);
+		console.log(number3);
 
-		}
+		number1Text = this.add.text(70, 200, 'Random number', { fontSize: '32px', fill: '#FFF' });
+		number2Text = this.add.text(100, 200, 'Random number', { fontSize: '32px', fill: '#FFF' });
+		number3Text = this.add.text(130, 200, 'Random number', { fontSize: '32px', fill: '#FFF' });
 
-		function update() 
-		{
-			//update canvas here
 
-		}
+//			this.input.on('pointerDown',function(pointer) {
+//					console.log('down');
+//				});
+		//mouse = this.input.mousedown.keypress();
+
+		//game.canvas.addEventListener('mouseDown', function(event) { console.log('down'); });
+
+	}
+
+	function update() 
+	{
+		//update canvas here
+		number1Text.setText(number1);
+		number2Text.setText(number2);
+		number3Text.setText(number3);
+
+	}
+
+	function pullLever() 
+	{
+		//random numbers generation
+		number1 = Phaser.Math.Between(1, 9);
+		number2 = Phaser.Math.Between(1, 9);
+		number3 = Phaser.Math.Between(1, 9);
+		console.log(number1, number2, number3);
+		
+	}
 
 </script>
 </html>
