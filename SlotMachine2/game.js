@@ -1,6 +1,3 @@
-window.onload = function() 
-{
-
 var config = {
 	width: 256,
 	height: 272,
@@ -10,4 +7,3 @@ var config = {
 
 
 	var game = new Phaser.Game(config);
-}
