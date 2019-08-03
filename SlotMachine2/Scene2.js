@@ -44,6 +44,39 @@ class Scene2 extends Phaser.Scene
 			repeat: 0, //doesn't repeat unless called
 			hideOnComplete: true
 		});
+		this.anims.create({
+			key: "red", //start: and end: specify which sprites to use in the same spritesheet
+			frames: this.anims.generateFrameNumbers("powerups", {start: 0, end: 1}),
+			frameRate: 20,
+			repeat: -1
+		});
+		this.anims.create({
+			key: "grey",
+			frames: this.anims.generateFrameNumbers("powerups", {start: 2, end: 3}),
+			frameRate: 20,
+			repeat: -1,
+		});
+
+		this.powerUps = this.physics.add.group();
+
+		var maxObjects = 4;
+		for (var i = 0; i <= maxObjects; i++) 
+		{
+			var powerUp = this.physics.add.sprite(16, 16, "powerups");
+			this.powerUps.add(powerUp); //add to grouping
+			powerUp.setRandomPosition(0, 0, game.config.width, game.config.height);
+
+			//random chance for sprite
+			if (Math.random() > 0.5) {
+				powerUp.play("red");
+			} else {
+				powerUp.play("grey");
+			}
+			//set velocity, world area and bounce
+			powerUp.setVelocity(100, 100);
+			powerUp.setCollideWorldBounds(true);
+			powerUp.setBounce(1);
+		}
 
 		this.ship1.play("ship1_anim");
 		this.ship2.play("ship2_anim");
