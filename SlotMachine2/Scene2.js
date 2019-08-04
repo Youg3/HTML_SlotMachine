@@ -13,6 +13,22 @@ class Scene2 extends Phaser.Scene
 		this.background = this.add.tileSprite(0, 0, config.width, config.height, "background");
 		this.background.setOrigin(0, 0); //reset background origin point to top left from centre
 
+		//score background box
+		var graphics = this.add.graphics();//define var with black fill
+		graphics.fillStyle(0x000000, 1);//
+		graphics.beginPath();//draw polygon lines with coordinates
+		graphics.moveTo(0, 0);
+		graphics.lineTo(config.width, 0);
+		graphics.lineTo(config.width, 20);
+		graphics.lineTo(0, 20);
+		graphics.lineTo(0, 0);
+		graphics.closePath();
+		graphics.fillPath(); //fill drawn polygon
+
+		this.score = 0;
+		//score label var: X,Y, use pixelFont, Spell out this word, font size
+		this.scoreLabel = this.add.bitmapText(10, 5, "pixelFont", "SCORE", 16);
+
 		//add ships using the global config var to position the ships
 		this.ship1 = this.add.sprite(config.width /2 - 50, config.height /2, "ship").setInteractive();
 		this.ship2 = this.add.sprite(config.width /2, config.height /2, "ship2").setInteractive();
@@ -50,7 +66,7 @@ class Scene2 extends Phaser.Scene
 
 		this.input.on('gameobjectdown', this.destroyShip, this);
 
-		this.add.text(20, 20, "Game loaded...", {font: "25px Arial", fill: "yellow"});
+		//this.add.text(20, 20, "Game loaded...", {font: "25px Arial", fill: "yellow"});
 
 		this.player = this.physics.add.sprite(config.width / 2 - 8, config.height - 64, "player");
 		this.player.play("thrust");
@@ -77,6 +93,15 @@ class Scene2 extends Phaser.Scene
 		this.physics.add.overlap(this.projectiles, this.enemies, this.enemyHit, null, this);
 	}
 
+	zeroPad(number, size) //func that adds zeros to the score label 
+	{
+		var stringNumber = String(number);
+		while (stringNumber.length < (size || 2)) {
+			stringNumber = "0" + stringNumber;
+		}
+		return stringNumber;
+	}
+
 	hurtPlayer(player, enemy) 
 	{
 		this.resetShipPos(enemy); //reset enemy ship position
@@ -89,6 +114,11 @@ class Scene2 extends Phaser.Scene
 		//simply destroy shot and reset enemy ship
 		projectile.destroy();
 		this.resetShipPos(enemy);
+		//increase score
+		this.score += 15;
+		var formatedScore = this.zeroPad(this.score, 6); //takes the score, formats with addtional 0s to the power of 6 
+		this.scoreLabel.text = "SCORE " + formatedScore; //display score
+
 	}
 
 	pickPowerUp(player, powerUp) {
