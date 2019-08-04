@@ -18,6 +18,11 @@ class Scene2 extends Phaser.Scene
 		this.ship2 = this.add.sprite(config.width /2, config.height /2, "ship2").setInteractive();
 		this.ship3 = this.add.sprite(config.width /2 + 50, config.height /2, "ship3").setInteractive();
 
+		this.enemies = this.physics.add.group();//enemy ship group
+		this.enemies.add(this.ship1);
+		this.enemies.add(this.ship2);
+		this.enemies.add(this.ship3);
+
 		this.powerUps = this.physics.add.group();
 
 		var maxObjects = 4;
@@ -56,6 +61,38 @@ class Scene2 extends Phaser.Scene
 		this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 		//group that holds all beam instances in game
 		this.projectiles = this.add.group();
+
+		//collision between game objects
+		this.physics.add.collider(this.projectiles, this.powerUps, function(projectile, powerUp) {
+			projectile.destroy(); //call own function and destroy the beam
+		});
+		//check for powerup and player overlap instead of collision so that physics are not stimulated
+		// first two params are what to check between, third is the callback func
+		// with the last two params for the callback scope
+		this.physics.add.overlap(this.player, this.powerUps, this.pickPowerUp, null, this);
+
+		//player and enemy ship collision with callback func hurtPlayer
+		this.physics.add.overlap(this.player, this.enemies, this.hurtPlayer, null, this);
+		//beam vs enemies
+		this.physics.add.overlap(this.projectiles, this.enemies, this.enemyHit, null, this);
+	}
+
+	hurtPlayer(player, enemy) 
+	{
+		this.resetShipPos(enemy); //reset enemy ship position
+		player.x = config.width / 2 - 8; //reset player position
+		player.y = config.height - 64;
+	}
+
+	enemyHit(projectile, enemy) 
+	{
+		//simply destroy shot and reset enemy ship
+		projectile.destroy();
+		this.resetShipPos(enemy);
+	}
+
+	pickPowerUp(player, powerUp) {
+		powerUp.disableBody(true, true); //two params set to true make it inactive and hide from display
 	}
 
 	moveShip(ship, speed) 
