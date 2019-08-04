@@ -54,6 +54,8 @@ class Scene2 extends Phaser.Scene
 
 		//shoot
 		this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+		//group that holds all beam instances in game
+		this.projectiles = this.add.group();
 	}
 
 	moveShip(ship, speed) 
@@ -88,7 +90,14 @@ class Scene2 extends Phaser.Scene
 		this.movePlayerManager();
 
 		if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
-			console.log("Fire");
+			this.shootBeam();
+		}
+
+		//iterate through each element of the projectiles group
+		for (var i = 0; i < this.projectiles.getChildren().length; i++) 
+		{
+			var beam = this.projectiles.getChildren()[i];
+			beam.update(); //call the beam class update func
 		}
 	}
 
@@ -114,4 +123,13 @@ class Scene2 extends Phaser.Scene
 		}
 	}
 
+	shootBeam() 
+	{	//one way to do it
+		//var beam = this.physics.add.sprite(this.player.x, this.player.y, "beam");
+
+		//another to inherit from the class Beam
+		var beam = new Beam(this);
+		console.log("Fire");
+
+	}
 }
