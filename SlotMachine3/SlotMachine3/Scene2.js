@@ -16,7 +16,7 @@ class Scene2 extends Phaser.Scene
 		var musicConfig = 
 		{
 			mute: false,
-			volume:1,
+			volume:0.5,
 			rate:1,
 			detune:0,
 			seek:0,
@@ -25,12 +25,28 @@ class Scene2 extends Phaser.Scene
 		}
 		this.music.play(musicConfig);
 
+		//other sound effects
+		this.leverPull = this.sound.add("leverpull");
+
+		this.testImage = this.add.sprite(config.width / 2 - 32, config.height / 2, "star").setInteractive();
+
 		//display game tokens
 		this.tokenLabel = this.add.bitmapText(100, 20, "pixelFont", "Tokens Remaining: " + gameTokens, 32);
 
+		this.input.on('gameobjectdown', this.pullLever, this);
 	}
 
-	update() {
+	pullLever() {
+		console.log("leverPull");
+		this.leverPull.play();
+		//update score
+		gameTokens -= 1;
+		this.tokenLabel.text = "Tokens Remaining: " + gameTokens;
+
+	}
+
+	update() 
+	{
 
 	}
 }
