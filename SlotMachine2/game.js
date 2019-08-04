@@ -1,4 +1,9 @@
-var config = {
+var gameSettings = {
+	playerSpeed: 200,
+}
+
+var config = 
+{
 	width: 256,
 	height: 272,
 	backgroundColour: 0x000000,
@@ -9,5 +14,4 @@ var config = {
 	}
 }
 
-
-	var game = new Phaser.Game(config);
+var game = new Phaser.Game(config);

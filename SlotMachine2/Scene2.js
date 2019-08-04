@@ -18,45 +18,6 @@ class Scene2 extends Phaser.Scene
 		this.ship2 = this.add.sprite(config.width /2, config.height /2, "ship2").setInteractive();
 		this.ship3 = this.add.sprite(config.width /2 + 50, config.height /2, "ship3").setInteractive();
 
-		//animations
-		this.anims.create({
-			key: "ship1_anim",
-			frames: this.anims.generateFrameNumbers("ship"),
-			frameRate: 20,
-			repeat: -1 //repeats indefinitely
-		});
-		this.anims.create({
-			key: "ship2_anim",
-			frames: this.anims.generateFrameNumbers("ship2"),
-			frameRate: 20,
-			repeat: -1
-		});
-		this.anims.create({
-			key: "ship3_anim",
-			frames: this.anims.generateFrameNumbers("ship3"),
-			frameRate: 20,
-			repeat: -1
-		});
-		this.anims.create({
-			key: "explode",
-			frames: this.anims.generateFrameNumbers("explosion"),
-			frameRate: 20,
-			repeat: 0, //doesn't repeat unless called
-			hideOnComplete: true
-		});
-		this.anims.create({
-			key: "red", //start: and end: specify which sprites to use in the same spritesheet
-			frames: this.anims.generateFrameNumbers("powerups", {start: 0, end: 1}),
-			frameRate: 20,
-			repeat: -1
-		});
-		this.anims.create({
-			key: "grey",
-			frames: this.anims.generateFrameNumbers("powerups", {start: 2, end: 3}),
-			frameRate: 20,
-			repeat: -1,
-		});
-
 		this.powerUps = this.physics.add.group();
 
 		var maxObjects = 4;
@@ -85,6 +46,14 @@ class Scene2 extends Phaser.Scene
 		this.input.on('gameobjectdown', this.destroyShip, this);
 
 		this.add.text(20, 20, "Game loaded...", {font: "25px Arial", fill: "yellow"});
+
+		this.player = this.physics.add.sprite(config.width / 2 - 8, config.height - 64, "player");
+		this.player.play("thrust");
+		this.cursorKeys = this.input.keyboard.createCursorKeys(); //var listener for keyboard event
+		this.player.setCollideWorldBounds(true);
+
+		//shoot
+		this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 	}
 
 	moveShip(ship, speed) 
@@ -115,6 +84,34 @@ class Scene2 extends Phaser.Scene
 
 		//decrease Y position of the background texture map so it scrolls down
 		this.background.tilePositionY -= 0.5;
+
+		this.movePlayerManager();
+
+		if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
+			console.log("Fire");
+		}
+	}
+
+	movePlayerManager() 
+	{
+		this.player.setVelocity(0); //set velocity to null when nothing pressed
+		//vertical
+		if (this.cursorKeys.left.isDown) 
+		{
+			this.player.setVelocityX(-gameSettings.playerSpeed); //uses a set var from game.js
+			//console.log("left");
+		}else if (this.cursorKeys.right.isDown) 
+		{
+			this.player.setVelocityX(gameSettings.playerSpeed);
+		}
+		//horizontal
+		if(this.cursorKeys.up.isDown)
+		{
+			this.player.setVelocityY(-gameSettings.playerSpeed);
+		}else if(this.cursorKeys.down.isDown)
+		{
+			this.player.setVelocityY(gameSettings.playerSpeed);
+		}
 	}
 
 }
