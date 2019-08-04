@@ -18,17 +18,16 @@ class Scene1 extends Phaser.Scene
 		this.load.spritesheet("player", "assets/spritesheets/player.png", {frameWidth: 16, frameHeight:24}); //player spritesheet
 		this.load.spritesheet("beam", "assets/spritesheets/beam.png", {frameWidth: 16, frameHeight:16}); //player spritesheet
 		this.load.bitmapFont("pixelFont", "assets/font/font.png", "assets/font/font.xml");//uses a bitmap and xml file for the font
+		this.load.audio("audio_beam", ["assets/sounds/beam.ogg", "assets/sounds/beam.mp3"]);//uses a bitmap and xml file for the font
+		this.load.audio("audio_explosion", ["assets/sounds/explosion.ogg", "assets/sounds/explosion.mp3"]);//uses a bitmap and xml file for the font
+		this.load.audio("audio_pickup", ["assets/sounds/pickup.ogg", "assets/sounds/pickup.mp3"]);//uses a bitmap and xml file for the font
+		this.load.audio("music", ["assets/sounds/sci-fi_platformer12.ogg", "assets/sounds/sci-fi_platformer12.mp3"]);//uses a bitmap and xml file for the font
 	}
 
 	create() 
 	{
 		this.add.text(20, 20, "Loading game...");
 		this.scene.start("playGame"); //calls Scene2
-
-		this.score = 0;
-
-		//score label var: X,Y, use pixelFont, Spell out this word, font size
-		this.scoreLabel = this.add.bitmapText(10, 5, "pixelFont", "SCORE", 16);
 
 		//animations
 		this.anims.create({

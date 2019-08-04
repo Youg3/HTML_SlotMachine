@@ -29,6 +29,26 @@ class Scene2 extends Phaser.Scene
 		//score label var: X,Y, use pixelFont, Spell out this word, font size
 		this.scoreLabel = this.add.bitmapText(10, 5, "pixelFont", "SCORE", 16);
 
+		//music
+		this.beamSound = this.sound.add("audio_beam");
+		this.pickupSound = this.sound.add("audio_pickup");
+		this.explosionSound = this.sound.add("audio_explosion");
+
+		this.music = this.sound.add("music");
+
+		var musicConfig = 
+		{
+			mute: false,
+			volume: 1,
+			rate: 1,
+			detune: 0,
+			seek: 0,
+			loop: false,
+			delay:0
+		}
+
+		this.music.play(musicConfig);
+
 		//add ships using the global config var to position the ships
 		this.ship1 = this.add.sprite(config.width /2 - 50, config.height /2, "ship").setInteractive();
 		this.ship2 = this.add.sprite(config.width /2, config.height /2, "ship2").setInteractive();
@@ -110,6 +130,7 @@ class Scene2 extends Phaser.Scene
 
 		var explosion = new Explosion(this, player.x, player.y);
 		player.disableBody(true, true); //hide ship once hit and exploded
+		this.explosionSound.play();
 
 		this.score -= 50;
 		var formatedScore = this.zeroPad(this.score, 6); //takes the score, formats with addtional 0s to the power of 6 
@@ -162,10 +183,12 @@ class Scene2 extends Phaser.Scene
 		var formatedScore = this.zeroPad(this.score, 6); //takes the score, formats with addtional 0s to the power of 6 
 		this.scoreLabel.text = "SCORE " + formatedScore; //display score
 
+		this.explosionSound.play();
 	}
 
 	pickPowerUp(player, powerUp) {
 		powerUp.disableBody(true, true); //two params set to true make it inactive and hide from display
+		this.pickupSound.play();
 	}
 
 	moveShip(ship, speed) 
@@ -244,6 +267,7 @@ class Scene2 extends Phaser.Scene
 		//another to inherit from the class Beam
 		var beam = new Beam(this);
 		console.log("Fire");
+		this.beamSound.play();
 
 	}
 }
