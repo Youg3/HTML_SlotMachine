@@ -8,7 +8,7 @@ class Scene2 extends Phaser.Scene
 	{
 		//LOAD BACKGROUND IMAGE FIRST HERE
 
-		this.add.text(20, 20, "game loaded");
+		//this.add.text(20, 20, "game loaded");
 		
 		//load background music
 		this.music = this.sound.add("music");
@@ -25,6 +25,8 @@ class Scene2 extends Phaser.Scene
 		}
 		this.music.play(musicConfig);
 
+		//display game tokens
+		this.tokenLabel = this.add.bitmapText(100, 20, "pixelFont", "Tokens Remaining: " + gameTokens, 32);
 
 	}
 

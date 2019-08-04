@@ -1,5 +1,8 @@
 // JavaScript source code
 
+//global variables
+var gameTokens = 200;
+
 var config = 
 {
 	width: 800,
