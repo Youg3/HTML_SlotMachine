@@ -105,12 +105,55 @@ class Scene2 extends Phaser.Scene
 	hurtPlayer(player, enemy) 
 	{
 		this.resetShipPos(enemy); //reset enemy ship position
-		player.x = config.width / 2 - 8; //reset player position
-		player.y = config.height - 64;
+
+		if (this.player.alpha < 1) {return;} //if player is transparent, can't be destroyed'
+
+		var explosion = new Explosion(this, player.x, player.y);
+		player.disableBody(true, true); //hide ship once hit and exploded
+
+		this.score -= 50;
+		var formatedScore = this.zeroPad(this.score, 6); //takes the score, formats with addtional 0s to the power of 6 
+		this.scoreLabel.text = "SCORE " + formatedScore; //display score
+
+		//a delay function that gives player time to react once respawned
+		this.time.addEvent(
+			{
+				delay: 1000,
+				callback: this.resetPlayer,
+				callbackScope: this,
+				loop: false
+			});
+	}
+
+	resetPlayer() 
+	{
+		var x = config.width / 2 - 8;
+		var y = config.height + 64;
+		this.player.enableBody(true, x, y, true, true); //re-enable player
+		//makes player transparent
+		this.player.alpha = 0.5;
+
+		//using a tween to act as a timer and animate at the same time
+		//here it targets the player game objects
+		//when player dies, object gets set to off screen then glides (tweens) on to screen
+		//before starting the time for 1.5 seconds where the ship is transparent
+		//resets transparency at the end of timer and player can is no longer invincible
+		var tween = this.tweens.add({
+			targets: this.player,
+			y: config.height - 64,
+			ease: 'Power1',
+			duration: 1500,
+			repeat: 0,
+			onComplete: function() { this.player.alpha = 1; },
+			callbackScope: this
+		});
 	}
 
 	enemyHit(projectile, enemy) 
 	{
+		//explosion animation
+		var explosion = new Explosion(this, enemy.x, enemy.y);
+
 		//simply destroy shot and reset enemy ship
 		projectile.destroy();
 		this.resetShipPos(enemy);
@@ -156,8 +199,12 @@ class Scene2 extends Phaser.Scene
 
 		this.movePlayerManager();
 
-		if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
-			this.shootBeam();
+		if (Phaser.Input.Keyboard.JustDown(this.spacebar)) 
+		{
+			//check if the player is active to allow shooting
+			if (this.player.active) {
+				this.shootBeam();
+			}
 		}
 
 		//iterate through each element of the projectiles group
