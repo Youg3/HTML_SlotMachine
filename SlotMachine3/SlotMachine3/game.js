@@ -2,6 +2,9 @@
 
 //global variables
 var gameTokens = 200;
+var jackpotTokens = 50;
+//var stars;
+var winClaimed = new Boolean(false);
 
 var config = 
 {

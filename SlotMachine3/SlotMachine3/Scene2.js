@@ -10,6 +10,8 @@ class Scene2 extends Phaser.Scene
 
 		//this.add.text(20, 20, "game loaded");
 		
+		this.winClaimed = true;
+
 		//load background music
 		this.music = this.sound.add("music");
 		//music config
@@ -61,26 +63,25 @@ class Scene2 extends Phaser.Scene
 		if(this.testgroup.y < -5){
 			this.testgroup.y = 625;
 		}
+		//this works though has a issue of running twice... why?
+		if(this.testgroup.y == this.testgroup2.y)
+		{
+			console.log("jackpot");
+			this.jackpot();
+			//winClaimed = true;
+		}
+
 		winClaimed = false;
 	}
 	
 	jackpot()
 	{
-		gameTokens += 50;
+		gameTokens += jackpotTokens;
 		this.tokenLabel.text = "Tokens Remaining: " + gameTokens;
 	}
 
 	update() 
 	{
-		if(winClaimed == false)
-		{
 
-			if(this.testgroup.y == this.testgroup2.y)
-			{
-				console.log("jackpot");
-				this.jackpot();
-				winClaimed = true;
-			}
-		}
 	}
 }
