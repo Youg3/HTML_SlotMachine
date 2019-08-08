@@ -15,6 +15,7 @@ class Scene1 extends Phaser.Scene
 
 		this.load.bitmapFont("pixelFont", "assets/font/font.png", "assets/font/font.xml");//xml map for font
 		this.load.image("star", "assets/star.png");//test image, remove later
+		this.load.image("starbomb", "assets/starbomb.png");
 
 	}
 	
