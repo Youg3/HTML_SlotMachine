@@ -48,8 +48,6 @@ class Scene2 extends Phaser.Scene
 
 		this.input.on('gameobjectdown', this.pullLever, this);
 
-		
-
 	}
 
 	pullLever() {
