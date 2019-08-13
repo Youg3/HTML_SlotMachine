@@ -46,18 +46,30 @@ class Scene2 extends Phaser.Scene
 		//display game tokens
 		this.tokenLabel = this.add.bitmapText(100, 20, "pixelFont", "Tokens Remaining: " + gameTokens, 32);
 
-		this.input.on('gameobjectdown', this.pullLever, this);
+		/*if(this.leverPull.isPlaying)
+		{
+			this.testImage.alpha = 0.5;
+		}else
+		{
+			this.testImage.alpha = 1;
+			this.input.on('gameobjectdown', this.pullLever, this);
+		}--- DOESN'T WORK CURRENTLY --- */
 
+		//plays pull lever function
+		this.input.on('gameobjectdown', this.pullLever, this);
+		
 	}
 
 	pullLever() {
 		console.log("leverPull");
 		this.leverPull.play();
+
 		//update score
 		gameTokens -= 1;
 		this.tokenLabel.text = "Tokens Remaining: " + gameTokens;
 
 		this.testgroup.y -= 50;
+
 		if(this.testgroup.y < -5){
 			this.testgroup.y = 625;
 		}
