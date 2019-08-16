@@ -3,6 +3,8 @@
 //image variables
 var testImage;
 var testgroup;
+var testgroup2;
+var testgroup3;
 
 //var spindleNumbers = new Array;
 
@@ -46,13 +48,8 @@ class Scene2 extends Phaser.Scene
 		testImage = this.add.sprite(config.width / 2 - 32, config.height / 2, "star").setInteractive();
 
 		testgroup = this.add.sprite(config.width / 2 -150, config.height / 2, "starbomb").setAngle(90);
-		this.testgroup2 = this.add.sprite(config.width / 2 -100, config.height / 2 - 25, "starbomb").setAngle(90);
-
-		var stars = this.physics.add.staticGroup({
-			key: 'starbomb',
-			repeat: 10,
-			setXY: {x:100, y: 100, stepY: 40}
-		});
+		testgroup2 = this.add.sprite(config.width / 2 -100, config.height / 2, "starbomb").setAngle(90);
+		testgroup3 = this.add.sprite(config.width / 2 -200, config.height / 2, "starbomb").setAngle(90);
 
 		//display game tokens
 		this.tokenLabel = this.add.bitmapText(100, 20, "pixelFont", "Tokens Remaining: " + gameTokens, 32);
@@ -84,12 +81,20 @@ class Scene2 extends Phaser.Scene
 		//var id = Phaser.Math.Between(0,3);
 
 		testgroup.y -= Phaser.Math.Between(1,4)*50;
+		testgroup2.y += Phaser.Math.Between(1,4)*50;
+		testgroup3.y -= Phaser.Math.Between(1,4)*50;
 
-		if(testgroup.y < -0){
-			testgroup.y = 425;
+		if(testgroup.y < 50){
+			testgroup.y = 400;
+		}
+		if(testgroup2.y > 400){
+			testgroup2.y = 50;
+		}
+		if(testgroup3.y < 50){
+			testgroup3.y = 400;
 		}
 		//this works though has a issue of running twice... why?
-		if(testgroup.y == this.testgroup2.y)
+		if(testgroup.y == testgroup2.y && testgroup2.y == testgroup3.y)
 		{
 			console.log("jackpot");
 			this.jackpot();
