@@ -2,6 +2,7 @@
 
 //image variables
 var testImage;
+var testgroup;
 
 //music variables
 var music;
@@ -44,7 +45,7 @@ class Scene2 extends Phaser.Scene
 
 		testImage = this.add.sprite(config.width / 2 - 32, config.height / 2, "star").setInteractive();
 
-		this.testgroup = this.add.sprite(config.width / 2 -150, config.height / 2, "starbomb").setAngle(90);
+		testgroup = this.add.sprite(config.width / 2 -150, config.height / 2, "starbomb").setAngle(90);
 		this.testgroup2 = this.add.sprite(config.width / 2 -100, config.height / 2 - 25, "starbomb").setAngle(90);
 
 		var stars = this.physics.add.staticGroup({
@@ -56,15 +57,6 @@ class Scene2 extends Phaser.Scene
 		//display game tokens
 		this.tokenLabel = this.add.bitmapText(100, 20, "pixelFont", "Tokens Remaining: " + gameTokens, 32);
 
-		/*if(this.leverPull.isPlaying)
-		{
-			this.testImage.alpha = 0.5;
-		}else
-		{
-			this.testImage.alpha = 1;
-			this.input.on('gameobjectdown', this.pullLever, this);
-		}--- DOESN'T WORK CURRENTLY --- */
-
 		//plays pull lever function
 		this.input.on('gameobjectdown', this.pullLever, this);
 		
@@ -72,31 +64,33 @@ class Scene2 extends Phaser.Scene
 
 	pullLever() 
 	{
-		//console.log("leverPull");
-		//leverPull.play();
-
+		//call sound func
 		this.leverPullSound();
 
 		//update score
 		gameTokens -= 1;
 		this.tokenLabel.text = "Tokens Remaining: " + gameTokens;
 
-		this.testgroup.y -= 50;
+		this.spindleMove();
+	}
+	
+	spindleMove()
+	{
+		//perhaps a tween or animation here?
 
-		if(this.testgroup.y < -5){
-			this.testgroup.y = 625;
+		testgroup.y -= 50;
+
+		if(testgroup.y < -5){
+			testgroup.y = 625;
 		}
 		//this works though has a issue of running twice... why?
-		if(this.testgroup.y == this.testgroup2.y)
+		if(testgroup.y == this.testgroup2.y)
 		{
 			console.log("jackpot");
 			this.jackpot();
-			//winClaimed = true;
 		}
-
-		winClaimed = false;
 	}
-	
+
 	leverPullSound(fn)
 	{
 		leverPull.once('play', function(sound){
@@ -138,11 +132,11 @@ class Scene2 extends Phaser.Scene
 		if(testImage.alpha < 1)
 		{
 			console.log("alpha below 1");
-			testImage.disableInteractive();
+			testImage.disableInteractive();//disables interactive nature of lever
 
 		}else if(testImage.alpha ==1){
 			console.log("alpha == 1");
-			testImage.setInteractive();
+			testImage.setInteractive();//re-activates leverpull
 		}
 	}
 }
