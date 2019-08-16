@@ -4,6 +4,8 @@
 var testImage;
 var testgroup;
 
+//var spindleNumbers = new Array;
+
 //music variables
 var music;
 var leverPull;
@@ -20,8 +22,6 @@ class Scene2 extends Phaser.Scene
 		//LOAD BACKGROUND IMAGE FIRST HERE
 
 		//this.add.text(20, 20, "game loaded");
-		
-		this.winClaimed = true;
 
 		//load background music
 		music = this.sound.add("music");
@@ -70,18 +70,23 @@ class Scene2 extends Phaser.Scene
 		//update score
 		gameTokens -= 1;
 		this.tokenLabel.text = "Tokens Remaining: " + gameTokens;
-
+		//calls spindle move func
 		this.spindleMove();
 	}
 	
+	//pick: function (array){
+	//	return array[this.spindleNumbers(0,array.length -1)];
+	//}
+
 	spindleMove()
 	{
 		//perhaps a tween or animation here?
+		//var id = Phaser.Math.Between(0,3);
 
-		testgroup.y -= 50;
+		testgroup.y -= Phaser.Math.Between(1,4)*50;
 
-		if(testgroup.y < -5){
-			testgroup.y = 625;
+		if(testgroup.y < -0){
+			testgroup.y = 425;
 		}
 		//this works though has a issue of running twice... why?
 		if(testgroup.y == this.testgroup2.y)
