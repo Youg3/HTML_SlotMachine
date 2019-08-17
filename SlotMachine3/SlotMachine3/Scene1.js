@@ -31,8 +31,8 @@ class Scene1 extends Phaser.Scene
 			key: "right",
 			frames: this.anims.generateFrameNumbers("dude", {start:5, end: 8}),
 			frameRate: 10,
-			repeat: -1,
-			//hideOnComplete: true
+			repeat: 0,
+			hideOnComplete: true
 		});
 
 
