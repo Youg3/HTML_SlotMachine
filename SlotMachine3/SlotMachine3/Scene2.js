@@ -59,7 +59,7 @@ class Scene2 extends Phaser.Scene
 		manTest2 = this.add.sprite(config.width -100, 100, "dude");
 
 		spindleAnimGrp = this.physics.add.group();
-		spindleAnimGrp.add(manTest);
+		//spindleAnimGrp.add(manTest);
 		spindleAnimGrp.add(manTest2);
 
 		//display game tokens
@@ -69,9 +69,10 @@ class Scene2 extends Phaser.Scene
 		this.input.on('gameobjectdown', this.pullLever, this);
 		
 
-		manTest.play("right");
-		manTest2.play("right");
-		//manTest.alpha = 0;
+		//manTest.play("right");
+		//manTest2.play("right");
+		manTest.alpha = 0;
+		manTest2.alpha = 0;
 		spindleAnimGrp.setAlpha = 0;
 	}
 
@@ -81,13 +82,22 @@ class Scene2 extends Phaser.Scene
 		this.leverPullSound();
 
 		//manTest.alpha = 1;
-		spindleAnimGrp.alpha = 1;
+		//spindleAnimGrp.alpha = 1;
+		this.spindleAnim();
 
 		//update score
 		gameTokens -= 1;
 		this.tokenLabel.text = "Tokens Remaining: " + gameTokens;
 		//calls spindle move func
 		this.spindleMove();
+	}
+
+	spindleAnim()
+	{
+		manTest.alpha = 1;
+		manTest2.alpha = 1;
+		manTest.play("right");
+		manTest2.play("right");
 	}
 	
 	//pick: function (array){
@@ -99,13 +109,58 @@ class Scene2 extends Phaser.Scene
 		//perhaps a tween or animation here?
 		//var id = Phaser.Math.Between(0,3);
 
-		testgroup.y -= Phaser.Math.Between(1,4)*50;
-		testgroup2.y += Phaser.Math.Between(1,4)*50;
-		testgroup3.y -= Phaser.Math.Between(1,4)*50;
+		var fn = Phaser.Math.Between(1,4)*50;
+		console.log("fn ", fn);
+		console.log("sprite ", testgroup.y);
+		var i = testgroup.y - fn;
+		console.log(i);
 
-		if(testgroup.y < 50){
-			testgroup.y = 400;
+		if(i < 50)
+		{
+			testgroup.y = 450;
+
+			var tween2 = this.tweens.add({
+				targets: testgroup,
+				y: testgroup.y - fn,
+				ease: 'Power1',
+				/*props: {
+					y: 
+					{
+						getEnd: ()=>{
+							testgroup.y - fn;
+						},
+						getStart: function(){ return this.current},
+					} 
+				},*/
+				duration: 1500,
+				repeat: 0,
+				onComplete: function(){console.log(tween2);},
+				callbackScope: this});
+
+			console.log("toptween ", testgroup.y);
+		}else
+		{
+			var tween1 = this.tweens.add({
+				targets: testgroup,
+				y: i,
+				ease: 'Power1',
+				duration: 1500,
+				repeat: 0,
+				callbackScope: this});
+			console.log("Tween1 ",testgroup.y);
 		}
+
+		console.log("after tween ",testgroup.y);
+
+		//testgroup.y -= Phaser.Math.Between(1,4)*50;
+		testgroup2.y += Phaser.Math.Between(1,4)*50;
+		//testgroup3.y -= Phaser.Math.Between(1,4)*50;
+
+		testgroup3.y = 400;
+
+		//if(testgroup.y < 50){
+		//	testgroup.y = 400;
+		//}
 		if(testgroup2.y > 400){
 			testgroup2.y = 50;
 		}
@@ -136,7 +191,7 @@ class Scene2 extends Phaser.Scene
 			console.log("playing sound");
 			testImage.alpha = 0.5;
 		}
-		leverPull.on('complete', function(sound){testImage.alpha = 1, spindleAnimGrp.alpha = 0;}); //callback func to re-enable the lever
+		leverPull.on('complete', function(sound){testImage.alpha = 1, manTest.alpha = 0, manTest2.alpha = 0;}); //callback func to re-enable the lever
 	}
 
 	jackpotSound()
