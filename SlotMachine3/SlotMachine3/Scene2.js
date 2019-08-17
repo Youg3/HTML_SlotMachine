@@ -8,6 +8,11 @@ var testgroup3;
 
 //var spindleNumbers = new Array;
 
+//spritesheet variables
+var manTest;
+var manTest2;
+var spindleAnimGrp;
+
 //music variables
 var music;
 var leverPull;
@@ -50,6 +55,12 @@ class Scene2 extends Phaser.Scene
 		testgroup = this.add.sprite(config.width / 2 -150, config.height / 2, "starbomb").setAngle(90);
 		testgroup2 = this.add.sprite(config.width / 2 -100, config.height / 2, "starbomb").setAngle(90);
 		testgroup3 = this.add.sprite(config.width / 2 -200, config.height / 2, "starbomb").setAngle(90);
+		manTest = this.add.sprite(config.width -50, 100, "dude");
+		manTest2 = this.add.sprite(config.width -100, 100, "dude");
+
+		spindleAnimGrp = this.physics.add.group();
+		spindleAnimGrp.add(manTest);
+		spindleAnimGrp.add(manTest2);
 
 		//display game tokens
 		this.tokenLabel = this.add.bitmapText(100, 20, "pixelFont", "Tokens Remaining: " + gameTokens, 32);
@@ -57,12 +68,20 @@ class Scene2 extends Phaser.Scene
 		//plays pull lever function
 		this.input.on('gameobjectdown', this.pullLever, this);
 		
+
+		manTest.play("right");
+		manTest2.play("right");
+		//manTest.alpha = 0;
+		spindleAnimGrp.setAlpha = 0;
 	}
 
 	pullLever() 
 	{
 		//call sound func
 		this.leverPullSound();
+
+		//manTest.alpha = 1;
+		spindleAnimGrp.alpha = 1;
 
 		//update score
 		gameTokens -= 1;
@@ -117,7 +136,7 @@ class Scene2 extends Phaser.Scene
 			console.log("playing sound");
 			testImage.alpha = 0.5;
 		}
-		leverPull.on('complete', function(sound){testImage.alpha = 1;}); //callback func to re-enable the lever
+		leverPull.on('complete', function(sound){testImage.alpha = 1, spindleAnimGrp.alpha = 0;}); //callback func to re-enable the lever
 	}
 
 	jackpotSound()
