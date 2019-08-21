@@ -122,22 +122,13 @@ class Scene2 extends Phaser.Scene
 			var tween2 = this.tweens.add({
 				targets: testgroup,
 				y: testgroup.y - fn,
-				ease: 'Power1',
-				/*props: {
-					y: 
-					{
-						getEnd: ()=>{
-							testgroup.y - fn;
-						},
-						getStart: function(){ return this.current},
-					} 
-				},*/
+				ease: 'Power0',
 				duration: 1500,
 				repeat: 0,
 				onComplete: function(){console.log(tween2);},
 				callbackScope: this});
 
-			console.log("toptween ", testgroup.y);
+			console.log("toptween ", tween2.getValue(y));
 		}else
 		{
 			var tween1 = this.tweens.add({
