@@ -12,6 +12,8 @@ var testgroup3;
 var manTest;
 var manTest2;
 var spindleAnimGrp;
+var leverDown;
+var spindle1;
 
 //music variables
 var music;
@@ -26,10 +28,6 @@ class Scene2 extends Phaser.Scene
 
 	create() 
 	{
-		//LOAD BACKGROUND IMAGE FIRST HERE
-
-		//this.add.text(20, 20, "game loaded");
-
 		//load background music
 		music = this.sound.add("music");
 		//music config
@@ -49,14 +47,19 @@ class Scene2 extends Phaser.Scene
 		leverPull = this.sound.add("leverpull");
 		jackpotSound = this.sound.add("slotpayoff");
 		coinsSound = this.sound.add("coins");
+		spindlesSound = this.sound.add("spindlesSound");
 
 		testImage = this.add.sprite(config.width / 2 - 32, config.height / 2, "star").setInteractive();
 
+		//test objects
 		testgroup = this.add.sprite(config.width / 2 -150, config.height / 2, "starbomb").setAngle(90);
 		testgroup2 = this.add.sprite(config.width / 2 -100, config.height / 2, "starbomb").setAngle(90);
 		testgroup3 = this.add.sprite(config.width / 2 -200, config.height / 2, "starbomb").setAngle(90);
 		manTest = this.add.sprite(config.width -50, 100, "dude");
 		manTest2 = this.add.sprite(config.width -100, 100, "dude");
+		//game objects
+		leverDown = this.add.sprite(config.width / 2, 200, "lever_spritesheet").setScale(0.5);
+		spindle1 = this.add.sprite(config.width - 100, config.height / 2, "dude").setScale(0.5);
 
 		spindleAnimGrp = this.physics.add.group();
 		//spindleAnimGrp.add(manTest);
@@ -69,51 +72,68 @@ class Scene2 extends Phaser.Scene
 		this.input.on('gameobjectdown', this.pullLever, this);
 		
 
-		//manTest.play("right");
-		//manTest2.play("right");
-		manTest.alpha = 0;
-		manTest2.alpha = 0;
+		manTest.play("right");
+		manTest2.play("right");
+		manTest.alpha = 1;
+		manTest2.alpha = 1;
 		spindleAnimGrp.setAlpha = 0;
 	}
 
 	pullLever() 
 	{
-		//call sound func
-		this.leverPullSound();
-
-		//manTest.alpha = 1;
-		//spindleAnimGrp.alpha = 1;
-		this.spindleAnim();
-
 		//update score
 		gameTokens -= 1;
 		this.tokenLabel.text = "Tokens Remaining: " + gameTokens;
+
+		//call sound func
+		this.leverPullSound();
+		//play animation
+		//leverDown.play("leverDown");
+		leverDown.play("leverUp");
+		
+		//this.spindleAnim();
+
 		//calls spindle move func
 		this.spindleMove();
 	}
 
 	spindleAnim()
 	{
+		//play animation and set to visible
 		manTest.alpha = 1;
 		manTest2.alpha = 1;
 		manTest.play("right");
 		manTest2.play("right");
+		
+		//call spindle sound func
+		this.spindleSound();
 	}
-	
-	//pick: function (array){
-	//	return array[this.spindleNumbers(0,array.length -1)];
-	//}
+
+	spindleSound()
+	{
+		//play spindle sound
+		spindlesSound.play();
+		if(spindlesSound.isPlaying)
+		{
+			console.log("Spindle Sounds Playing");
+		}
+		//callback func to set the spindle animation strip to invisible
+		spindlesSound.on('complete', function(sound){manTest.alpha = 0, manTest2.alpha = 0, testImage.alpha = 1;});
+	}
 
 	spindleMove()
 	{
-		//perhaps a tween or animation here?
-		//var id = Phaser.Math.Between(0,3);
 
 		var fn = Phaser.Math.Between(1,4)*50;
 		console.log("fn ", fn);
-		console.log("sprite ", testgroup.y);
+		console.log("spindle 1 current y: ", testgroup.y);
 		var i = testgroup.y - fn;
-		console.log(i);
+		console.log("expected y loc: ", i);
+
+		/*
+			Could never get the tween to work.  Although the sprite would more and tween to end position, the sprite would never set it's Y position to 
+			the ending position until the player pulled the lever again.  This meant that the JACKPOT condition could be met despite the spindles themselves
+			not lining up.
 
 		if(i < 50)
 		{
@@ -128,7 +148,7 @@ class Scene2 extends Phaser.Scene
 				onComplete: function(){console.log(tween2);},
 				callbackScope: this});
 
-			console.log("toptween ", tween2.getValue(y));
+			console.log("toptween ", tween2.y.getValue());
 		}else
 		{
 			var tween1 = this.tweens.add({
@@ -139,19 +159,17 @@ class Scene2 extends Phaser.Scene
 				repeat: 0,
 				callbackScope: this});
 			console.log("Tween1 ",testgroup.y);
-		}
+		}*/
 
-		console.log("after tween ",testgroup.y);
+		console.log("y location spindle1 ",testgroup.y);
 
-		//testgroup.y -= Phaser.Math.Between(1,4)*50;
+		testgroup.y -= Phaser.Math.Between(1,4)*50;
 		testgroup2.y += Phaser.Math.Between(1,4)*50;
-		//testgroup3.y -= Phaser.Math.Between(1,4)*50;
+		testgroup3.y -= Phaser.Math.Between(1,4)*50;
 
-		testgroup3.y = 400;
-
-		//if(testgroup.y < 50){
-		//	testgroup.y = 400;
-		//}
+		if(testgroup.y < 50){
+			testgroup.y = 400;
+		}
 		if(testgroup2.y > 400){
 			testgroup2.y = 50;
 		}
@@ -166,23 +184,16 @@ class Scene2 extends Phaser.Scene
 		}
 	}
 
-	leverPullSound(fn)
+	leverPullSound()
 	{
-		leverPull.once('play', function(sound){
-			console.log("leverPullSound");
-			this.time.addEvent({
-				delay: 2000,
-				callback: fn,
-				callbackScope: this	
-			});
-		}, this);
-		leverPull.play();
+		leverPull.play(); //play track
 		//check the sound is playing and set the lever to unclickable.
-		if(leverPull.isPlaying){
+		if(leverPull.isPlaying)
+		{		
 			console.log("playing sound");
 			testImage.alpha = 0.5;
 		}
-		leverPull.on('complete', function(sound){testImage.alpha = 1, manTest.alpha = 0, manTest2.alpha = 0;}); //callback func to re-enable the lever
+		leverPull.on('complete', function(sound){return},this.spindleAnim());
 	}
 
 	jackpotSound()
