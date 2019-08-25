@@ -9,14 +9,18 @@ var testgroup3;
 //var spindleNumbers = new Array;
 
 var slotmachineBase;
+var spindle1;
 var spindle2;
+var spindle3;
 
 //spritesheet variables
 var manTest;
 var manTest2;
 var spindleAnimGrp;
 var leverDown;
-var spindle1;
+var spindleAnim1;
+var spindleAnim2;
+var spindleAnim3;
 
 //music variables
 var music;
@@ -52,21 +56,24 @@ class Scene2 extends Phaser.Scene
 		coinsSound = this.sound.add("coins");
 		spindlesSound = this.sound.add("spindlesSound");
 
-		testImage = this.add.sprite(config.width / 2 - 32, config.height / 2, "star").setInteractive();
+		testImage = this.add.sprite(config.width -200, config.height / 2, "star").setInteractive();
 
-		slotmachineBase = this.add.sprite(0,0,"slotmachine");
+		slotmachineBase = this.add.sprite(config.width / 2,config.height / 2,"slotmachine").setScale(0.5);
 
 		//test objects
-		testgroup = this.add.sprite(config.width / 2 -150, config.height / 2, "starbomb").setAngle(90);
-		testgroup2 = this.add.sprite(config.width / 2 -100, config.height / 2, "starbomb").setAngle(90);
-		testgroup3 = this.add.sprite(config.width / 2 -200, config.height / 2, "starbomb").setAngle(90);
+		testgroup = this.add.sprite(50, config.height / 2, "starbomb").setAngle(90);
+		testgroup2 = this.add.sprite(100, config.height / 2, "starbomb").setAngle(90);
+		testgroup3 = this.add.sprite(150, config.height / 2, "starbomb").setAngle(90);
 		manTest = this.add.sprite(config.width -50, 100, "dude");
-		manTest2 = this.add.sprite(config.width -100, 100, "dude");
+		manTest2 = this.add.sprite(config.width -200, 100, "dude");
 		//game objects
-		leverDown = this.add.sprite(config.width / 2, 200, "lever_spritesheet").setScale(0.5);
-		spindle1 = this.add.sprite(config.width - 100, config.height / 2, "spindle").setScale(0.5);
+		leverDown = this.add.sprite(config.width / 2 + 319, 200, "lever_spritesheet").setScale(0.5);
+		spindleAnim1 = this.add.sprite(config.width - 100, config.height / 2, "spindle").setScale(0.5);
 
-		spindle2 = this.add.sprite(config.width - 250, config.height / 2, "spindleStrip").setScale(0.5);
+		spindle1 = this.add.sprite(config.width / 2 - 88, config.height / 2, "spindleStrip").setScale(0.5);
+		spindle2 = this.add.sprite(config.width / 2, config.height / 2, "spindleStrip").setScale(0.5);
+		spindle3 = this.add.sprite(config.width / 2 + 88, config.height / 2, "spindleStrip").setScale(0.5);
+
 
 		spindleAnimGrp = this.physics.add.group();
 		//spindleAnimGrp.add(manTest);
@@ -82,10 +89,10 @@ class Scene2 extends Phaser.Scene
 		manTest.play("right");
 		manTest2.play("right");
 		manTest.alpha = 1;
-		manTest2.alpha = 1;
-		spindleAnimGrp.setAlpha = 0;
+		//manTest2.alpha = 1;
+		spindleAnimGrp.toggleVisible();
 
-		spindle1.play("spindleRun");
+		spindleAnim1.play("spindleRun");
 
 	}
 
@@ -115,6 +122,9 @@ class Scene2 extends Phaser.Scene
 		manTest.play("right");
 		manTest2.play("right");
 		
+		spindleAnim1.alpha = 1;
+		spindleAnim1.play("spindleRun");
+
 		//call spindle sound func
 		this.spindleSound();
 	}
@@ -128,7 +138,7 @@ class Scene2 extends Phaser.Scene
 			console.log("Spindle Sounds Playing");
 		}
 		//callback func to set the spindle animation strip to invisible
-		spindlesSound.on('complete', function(sound){manTest.alpha = 0, manTest2.alpha = 0, testImage.alpha = 1;});
+		spindlesSound.on('complete', function(sound){manTest.alpha = 0, manTest2.alpha = 0, spindleAnim1.alpha = 0, testImage.alpha = 1;},this.jackpot());
 	}
 
 	spindleMove()
@@ -136,8 +146,8 @@ class Scene2 extends Phaser.Scene
 
 		var fn = Phaser.Math.Between(1,4)*50;
 		console.log("fn ", fn);
-		console.log("spindle 1 current y: ", testgroup.y);
-		var i = testgroup.y - fn;
+		console.log("spindle 1 current y: ", spindle2.y);
+		var i = spindle2.y - fn;
 		console.log("expected y loc: ", i);
 
 		/*
@@ -171,26 +181,26 @@ class Scene2 extends Phaser.Scene
 			console.log("Tween1 ",testgroup.y);
 		}*/
 
-		console.log("y location spindle1 ",testgroup.y);
+		console.log("y location spindle1 ",spindle2.y);
 
-		testgroup.y -= Phaser.Math.Between(1,4)*50;
-		testgroup2.y += Phaser.Math.Between(1,4)*50;
-		testgroup3.y -= Phaser.Math.Between(1,4)*50;
+		spindle1.y -= Phaser.Math.Between(1,4)*50;
+		spindle2.y += Phaser.Math.Between(1,4)*50;
+		spindle3.y -= Phaser.Math.Between(1,4)*50;
 
-		if(testgroup.y < 50){
-			testgroup.y = 400;
+		if(spindle1.y < 160){
+			spindle1.y = 450;
 		}
-		if(testgroup2.y > 400){
-			testgroup2.y = 50;
+		if(spindle2.y > 450){
+			spindle2.y = 150;
 		}
-		if(testgroup3.y < 50){
-			testgroup3.y = 400;
+		if(spindle3.y < 160){
+			spindle3.y = 450;
 		}
 		//this works though has a issue of running twice... why?
-		if(testgroup.y == testgroup2.y && testgroup2.y == testgroup3.y)
+		if(spindle2.y == spindle2.y && spindle2.y == spindle3.y)
 		{
 			console.log("jackpot");
-			this.jackpot();
+			//this.jackpot();
 		}
 	}
 
@@ -210,17 +220,23 @@ class Scene2 extends Phaser.Scene
 	{
 		jackpotSound.play();
 		
-		//jackpotSound.onStop.addOnce(console.log("sound played"));
+		//add images here.
 	}
 
 	jackpot()
 	{
-		gameTokens += jackpotTokens;
-		this.tokenLabel.text = "Tokens Remaining: " + gameTokens;
-		this.jackpotSound();
-		jackpotSound.on('complete', function(sound) {
-			console.log("callbackfunc");
-		});
+		//this works though has a issue of running twice... why?
+		if(spindle2.y == spindle2.y && spindle2.y == spindle3.y)
+		{
+			console.log("jackpot2");
+						
+			gameTokens += jackpotTokens;
+			this.tokenLabel.text = "Tokens Remaining: " + gameTokens;
+			this.jackpotSound();
+			jackpotSound.on('complete', function(sound) {
+				console.log("callbackfunc");
+			});
+		}
 	}
 
 	update() 
