@@ -106,7 +106,7 @@ class Scene2 extends Phaser.Scene
 		this.leverPullSound();
 		//play animation
 		//leverDown.play("leverDown");
-		leverDown.play("leverUp");
+		leverDown.play("leverDown");
 		
 		//this.spindleAnim();
 

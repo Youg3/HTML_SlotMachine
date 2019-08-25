@@ -43,8 +43,9 @@ class Scene1 extends Phaser.Scene
 		//lever animation
 		this.anims.create({
 			key: "leverDown",
-			frames: this.anims.generateFrameNumbers("lever_spritesheet", {start:0, end: 3}),
-			frameRate: 4,
+			frames: this.anims.generateFrameNumbers("lever_spritesheet"),
+			frameRate: 8,
+			yoyo: true,
 			repeat: 0		
 		});
 		this.anims.create({
