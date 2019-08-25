@@ -17,10 +17,13 @@ class Scene1 extends Phaser.Scene
 		this.load.bitmapFont("pixelFont", "assets/font/font.png", "assets/font/font.xml");//xml map for font
 		this.load.image("star", "assets/star.png");//test image, remove later
 		this.load.image("starbomb", "assets/starbomb.png");//test image for lever
+
+		//slotmachine sprites XML
+		this.load.image("slotmachine", "assets/slot_machine_base.png");
 		//spritesheet animation
 		this.load.spritesheet("dude", "assets/spritesheets/dude.png", {frameWidth:32, frameHeight:48});
 		this.load.spritesheet("lever_spritesheet", "assets/spritesheets/lever_spritesheet_4x1.png", {frameWidth:146, frameHeight:565});
-		this.load.spritesheet("spindle", "assets/spritesheets/lever_spritesheet_4x1.png", {frameWidth:146, frameHeight:565}); //"assets/spritesheets/spindle_spritesheet.png", {frameWidth:117, frameHeight:290});
+		this.load.spritesheet("spindle", "assets/spritesheets/spindle_spritesheet.png", {frameWidth:117, frameHeight:290});
 
 	}
 	
@@ -50,5 +53,6 @@ class Scene1 extends Phaser.Scene
 			repeat: 0		
 		});
 
+		
 	}
 }

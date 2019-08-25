@@ -8,6 +8,8 @@ var testgroup3;
 
 //var spindleNumbers = new Array;
 
+var slotmachineBase;
+
 //spritesheet variables
 var manTest;
 var manTest2;
@@ -51,6 +53,8 @@ class Scene2 extends Phaser.Scene
 
 		testImage = this.add.sprite(config.width / 2 - 32, config.height / 2, "star").setInteractive();
 
+		slotmachineBase = this.add.sprite(0,0,"slotmachine");
+
 		//test objects
 		testgroup = this.add.sprite(config.width / 2 -150, config.height / 2, "starbomb").setAngle(90);
 		testgroup2 = this.add.sprite(config.width / 2 -100, config.height / 2, "starbomb").setAngle(90);
@@ -59,7 +63,7 @@ class Scene2 extends Phaser.Scene
 		manTest2 = this.add.sprite(config.width -100, 100, "dude");
 		//game objects
 		leverDown = this.add.sprite(config.width / 2, 200, "lever_spritesheet").setScale(0.5);
-		spindle1 = this.add.sprite(config.width - 100, config.height / 2, "dude").setScale(0.5);
+		spindle1 = this.add.sprite(config.width - 100, config.height / 2, "spindle").setScale(0.5);
 
 		spindleAnimGrp = this.physics.add.group();
 		//spindleAnimGrp.add(manTest);
