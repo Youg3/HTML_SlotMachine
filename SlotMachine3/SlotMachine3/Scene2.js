@@ -106,7 +106,7 @@ class Scene2 extends Phaser.Scene
 		this.leverPullSound();
 		//play animation
 		//leverDown.play("leverDown");
-		leverDown.play("leverDown");
+		//leverDown.play("leverDown");
 		
 		//this.spindleAnim();
 
@@ -138,12 +138,11 @@ class Scene2 extends Phaser.Scene
 			console.log("Spindle Sounds Playing");
 		}
 		//callback func to set the spindle animation strip to invisible
-		spindlesSound.on('complete', function(sound){manTest.alpha = 0, manTest2.alpha = 0, spindleAnim1.alpha = 0, testImage.alpha = 1;},this.jackpot());
+		spindlesSound.on('complete', function(sound){manTest.alpha = 0, manTest2.alpha = 0, spindleAnim1.alpha = 0, testImage.alpha = 1;});
 	}
 
 	spindleMove()
 	{
-
 		var fn = Phaser.Math.Between(1,4)*50;
 		console.log("fn ", fn);
 		console.log("spindle 1 current y: ", spindle2.y);
@@ -207,6 +206,7 @@ class Scene2 extends Phaser.Scene
 	leverPullSound()
 	{
 		leverPull.play(); //play track
+		leverDown.play("leverDown"); //play lever animation
 		//check the sound is playing and set the lever to unclickable.
 		if(leverPull.isPlaying)
 		{		
