@@ -9,6 +9,7 @@ var testgroup3;
 //var spindleNumbers = new Array;
 
 var slotmachineBase;
+var spindle2;
 
 //spritesheet variables
 var manTest;
@@ -65,6 +66,8 @@ class Scene2 extends Phaser.Scene
 		leverDown = this.add.sprite(config.width / 2, 200, "lever_spritesheet").setScale(0.5);
 		spindle1 = this.add.sprite(config.width - 100, config.height / 2, "spindle").setScale(0.5);
 
+		spindle2 = this.add.sprite(config.width - 250, config.height / 2, "spindleStrip").setScale(0.5);
+
 		spindleAnimGrp = this.physics.add.group();
 		//spindleAnimGrp.add(manTest);
 		spindleAnimGrp.add(manTest2);
@@ -81,6 +84,9 @@ class Scene2 extends Phaser.Scene
 		manTest.alpha = 1;
 		manTest2.alpha = 1;
 		spindleAnimGrp.setAlpha = 0;
+
+		spindle1.play("spindleRun");
+
 	}
 
 	pullLever() 

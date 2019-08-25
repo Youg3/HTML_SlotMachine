@@ -18,12 +18,13 @@ class Scene1 extends Phaser.Scene
 		this.load.image("star", "assets/star.png");//test image, remove later
 		this.load.image("starbomb", "assets/starbomb.png");//test image for lever
 
-		//slotmachine sprites XML
+		//slotmachine sprites
 		this.load.image("slotmachine", "assets/slot_machine_base.png");
+		this.load.image("spindleStrip","assets/spindle_strip.png");
 		//spritesheet animation
 		this.load.spritesheet("dude", "assets/spritesheets/dude.png", {frameWidth:32, frameHeight:48});
 		this.load.spritesheet("lever_spritesheet", "assets/spritesheets/lever_spritesheet_4x1.png", {frameWidth:146, frameHeight:565});
-		this.load.spritesheet("spindle", "assets/spritesheets/spindle_spritesheet.png", {frameWidth:117, frameHeight:290});
+		this.load.spritesheet("spindle", "assets/spritesheets/spindle_spritesheet.png", {frameWidth:123, frameHeight:291});
 
 	}
 	
@@ -39,7 +40,7 @@ class Scene1 extends Phaser.Scene
 			frameRate: 10,
 			repeat: 10
 		});
-
+		//lever animation
 		this.anims.create({
 			key: "leverDown",
 			frames: this.anims.generateFrameNumbers("lever_spritesheet", {start:0, end: 3}),
@@ -52,7 +53,12 @@ class Scene1 extends Phaser.Scene
 			frameRate: 4,
 			repeat: 0		
 		});
-
-		
+		//spindle animation
+		this.anims.create({
+			key: "spindleRun",
+			frames: this.anims.generateFrameNumbers("spindle", {start:0, end: 13}),
+			frameRate: 60,
+			repeat: 10	
+		});
 	}
 }
