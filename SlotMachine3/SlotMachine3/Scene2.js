@@ -12,6 +12,7 @@ var slotmachineBase;
 var spindle1;
 var spindle2;
 var spindle3;
+var jackpotSign;
 
 //spritesheet variables
 var manTest;
@@ -59,6 +60,7 @@ class Scene2 extends Phaser.Scene
 		testImage = this.add.sprite(config.width -200, config.height / 2, "star").setInteractive();
 
 		slotmachineBase = this.add.sprite(config.width / 2,config.height / 2,"slotmachine").setScale(0.5);
+		jackpotSign = this.add.sprite(config.width / 2, 50,"jackpotSign");
 
 		//test objects
 		testgroup = this.add.sprite(50, config.height / 2, "starbomb").setAngle(90);
@@ -69,7 +71,7 @@ class Scene2 extends Phaser.Scene
 		//game objects
 		leverDown = this.add.sprite(config.width / 2 + 319, 200, "lever_spritesheet").setScale(0.5);
 		spindleAnim1 = this.add.sprite(config.width - 100, config.height / 2, "spindle").setScale(0.5);
-
+		//spindle strips
 		spindle1 = this.add.sprite(config.width / 2 - 88, config.height / 2, "spindleStrip").setScale(0.5);
 		spindle2 = this.add.sprite(config.width / 2, config.height / 2, "spindleStrip").setScale(0.5);
 		spindle3 = this.add.sprite(config.width / 2 + 88, config.height / 2, "spindleStrip").setScale(0.5);
@@ -138,7 +140,9 @@ class Scene2 extends Phaser.Scene
 			console.log("Spindle Sounds Playing");
 		}
 		//callback func to set the spindle animation strip to invisible
-		spindlesSound.on('complete', function(sound){manTest.alpha = 0, manTest2.alpha = 0, spindleAnim1.alpha = 0, testImage.alpha = 1;});
+		spindlesSound.on('complete', function(sound){manTest.alpha = 0, manTest2.alpha = 0, spindleAnim1.alpha = 0, testImage.aplha = 1, this.jackpot();}, this);
+		//tried to make the function for jackpot only call once upon completion of this callback.  Keep getting a 'Listener' typeError, don't know why.
+		//replace = this.jackpot();   with -> this.events.once('jackpot', this.jackpot()); 
 	}
 
 	spindleMove()
@@ -196,11 +200,15 @@ class Scene2 extends Phaser.Scene
 			spindle3.y = 450;
 		}
 		//this works though has a issue of running twice... why?
-		if(spindle2.y == spindle2.y && spindle2.y == spindle3.y)
+		/*if(spindle2.y == spindle2.y && spindle2.y == spindle3.y)
 		{
 			console.log("jackpot");
 			//this.jackpot();
-		}
+		}*/
+	}
+
+	waiting(){
+		console.log("waiting");
 	}
 
 	leverPullSound()
@@ -213,41 +221,52 @@ class Scene2 extends Phaser.Scene
 			console.log("playing sound");
 			testImage.alpha = 0.5;
 		}
-		leverPull.on('complete', function(sound){return},this.spindleAnim());
+		leverPull.on('complete', function(sound){console.log("lever pull sound complete"), this.spindleAnim();}, this);
 	}
 
 	jackpotSound()
 	{
 		jackpotSound.play();
 		
-		//add images here.
+		//jackpotSign.setTint(0xff0000);
+		//jackpotSign.setTint(0xffff00);
+
+
 	}
 
 	jackpot()
 	{
 		//this works though has a issue of running twice... why?
-		if(spindle2.y == spindle2.y && spindle2.y == spindle3.y)
+		if(spindle1.y == spindle2.y && spindle2.y == spindle3.y)
 		{
-			console.log("jackpot2");
-						
+			console.log("jackpot");
+			
+			console.log(spindle1.y, spindle2.y, spindle3.y);
+
 			gameTokens += jackpotTokens;
 			this.tokenLabel.text = "Tokens Remaining: " + gameTokens;
 			this.jackpotSound();
-			jackpotSound.on('complete', function(sound) {
-				console.log("callbackfunc");
-			});
+			testImage.alpha = 1;
+			jackpotSound.on('complete', function(sound) {console.log("Jackpot Calculated");});
+		}else
+		{
+			console.log("No Jackpot");
+			testImage.alpha = 1;
 		}
+
+		//return;
+
 	}
 
 	update() 
 	{
 		if(testImage.alpha < 1)
 		{
-			console.log("alpha below 1");
+			//console.log("alpha below 1");
 			testImage.disableInteractive();//disables interactive nature of lever
 
 		}else if(testImage.alpha ==1){
-			console.log("alpha == 1");
+			//console.log("alpha == 1");
 			testImage.setInteractive();//re-activates leverpull
 		}
 	}
