@@ -21,6 +21,9 @@ class Scene1 extends Phaser.Scene
 		//slotmachine sprites
 		this.load.image("slotmachine", "assets/slot_machine_base.png");
 		this.load.image("spindleStrip","assets/spindle_strip.png");
+		//this.load.image("jackpotSign", "assets/jackpot_sign.png");
+		this.load.image("jackpotSign", "assets/jackpot_sign.png");
+
 		//spritesheet animation
 		this.load.spritesheet("dude", "assets/spritesheets/dude.png", {frameWidth:32, frameHeight:48});
 		this.load.spritesheet("lever_spritesheet", "assets/spritesheets/lever_spritesheet_4x1.png", {frameWidth:146, frameHeight:565});
