@@ -21,14 +21,13 @@ class Scene1 extends Phaser.Scene
 		//slotmachine sprites
 		this.load.image("slotmachine", "assets/slot_machine_base.png");
 		this.load.image("spindleStrip","assets/spindle_strip.png");
-		//this.load.image("jackpotSign", "assets/jackpot_sign.png");
 		this.load.image("jackpotSign", "assets/jackpot_sign.png");
 
 		//spritesheet animation
 		this.load.spritesheet("dude", "assets/spritesheets/dude.png", {frameWidth:32, frameHeight:48});
 		this.load.spritesheet("lever_spritesheet", "assets/spritesheets/lever_spritesheet_4x1.png", {frameWidth:146, frameHeight:565});
 		this.load.spritesheet("spindle", "assets/spritesheets/spindle_spritesheet.png", {frameWidth:123, frameHeight:291});
-
+		this.load.spritesheet("jackpot_spritesheet", "assets/spritesheets/jackpot_sign_anim.png", {frameWidth:460, frameHeight:115});
 	}
 	
 	create() 
@@ -51,12 +50,6 @@ class Scene1 extends Phaser.Scene
 			yoyo: true,
 			repeat: 0		
 		});
-		this.anims.create({
-			key: "leverUp",
-			frames: this.anims.generateFrameNumbers("lever_spritesheet", {start:3, end: 0}),
-			frameRate: 4,
-			repeat: 0		
-		});
 		//spindle animation
 		this.anims.create({
 			key: "spindleRun",
@@ -64,5 +57,14 @@ class Scene1 extends Phaser.Scene
 			frameRate: 60,
 			repeat: 10	
 		});
+		//Jackpot animation
+				//lever animation
+				this.anims.create({
+					key: "jackPot",
+					frames: this.anims.generateFrameNumbers("jackpot_spritesheet"),
+					frameRate: 2,
+					yoyo: true,
+					repeat: 3		
+				});
 	}
 }

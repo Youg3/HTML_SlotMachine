@@ -1,15 +1,15 @@
 // JavaScript source code
 
 //global variables
-var gameTokens = 200;
-var jackpotTokens = 50;
-//var stars;
-var winClaimed = new Boolean(false);
+var gameTokens = 50;
+var jackpotTokens = 10;
+var count = 0;
+var autoWin = 1;
 
 var config = 
 {
-	width: 800,
-	height: 600,
+	width: 410,
+	height: 425,
 	backgroundColour: 0x000000,
 	scene: [Scene1, Scene2], //scenes held in an array
 	physics: {

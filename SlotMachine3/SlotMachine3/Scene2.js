@@ -6,8 +6,6 @@ var testImage;
 //var testgroup2;
 //var testgroup3;
 
-//var spindleNumbers = new Array;
-
 var slotmachineBase;
 var spindle1;
 var spindle2;
@@ -22,6 +20,7 @@ var leverDown;
 var spindleAnim1;
 var spindleAnim2;
 var spindleAnim3;
+var jackpotAnim;
 
 //music variables
 var music;
@@ -57,33 +56,38 @@ class Scene2 extends Phaser.Scene
 		coinsSound = this.sound.add("coins");
 		spindlesSound = this.sound.add("spindlesSound");
 
-		testImage = this.add.sprite(config.width -200, config.height / 2, "star").setInteractive();
-
-		slotmachineBase = this.add.sprite(config.width / 2,config.height / 2,"slotmachine").setScale(0.5);
-		jackpotSign = this.add.sprite(config.width / 2, 50,"jackpotSign").setScale(0.5);
-
 		//test objects
 		//testgroup = this.add.sprite(50, config.height / 2, "starbomb").setAngle(90);
 		//testgroup2 = this.add.sprite(100, config.height / 2, "starbomb").setAngle(90);
 		//testgroup3 = this.add.sprite(150, config.height / 2, "starbomb").setAngle(90);
 		//manTest = this.add.sprite(config.width -50, 100, "dude");
 		//manTest2 = this.add.sprite(config.width -200, 100, "dude");
-		//game objects
-		leverDown = this.add.sprite(config.width / 2 + 319, 200, "lever_spritesheet").setScale(0.5);
-		spindleAnim1 = this.add.sprite(config.width - 100, config.height / 2, "spindle").setScale(0.5);
-		spindleAnim2 = this.add.sprite(config.width - 188, config.height / 2, "spindle").setScale(0.5);
-		spindleAnim3 = this.add.sprite(config.width - 276, config.height / 2, "spindle").setScale(0.5);
-		//spindle strips
-		spindle1 = this.add.sprite(config.width / 2 - 88, config.height / 2, "spindleStrip").setScale(0.5);
-		spindle2 = this.add.sprite(config.width / 2, config.height / 2, "spindleStrip").setScale(0.5);
-		spindle3 = this.add.sprite(config.width / 2 + 88, config.height / 2, "spindleStrip").setScale(0.5);
 
+		//game objects
+		leverDown = this.add.sprite(config.width / 2 + 165, config.height / 2 + 25, "lever_spritesheet").setScale(0.5);
+		spindleAnim1 = this.add.sprite(config.width / 2 - 120, config.height / 2 - 7.5, "spindle").setScale(0.5);
+		spindleAnim2 = this.add.sprite(config.width / 2 - 30, config.height / 2 - 7.5, "spindle").setScale(0.5);
+		spindleAnim3 = this.add.sprite(config.width / 2 + 55, config.height / 2 - 7.5, "spindle").setScale(0.5);
+		//spindle strips
+		spindle1 = this.add.sprite(config.width / 2 - 118, config.height / 2 - 7.5, "spindleStrip").setScale(0.5);
+		spindle2 = this.add.sprite(config.width / 2 - 30, config.height / 2 - 7.5, "spindleStrip").setScale(0.5);
+		spindle3 = this.add.sprite(config.width / 2 + 57, config.height / 2 - 7.5, "spindleStrip").setScale(0.5);
+		//clickable star
+		testImage = this.add.sprite(config.width/2 + 167, 130, "star").setInteractive();
+		//main images
+		slotmachineBase = this.add.sprite(config.width / 2 - 30,config.height / 2,"slotmachine").setScale(0.5);
+		//jackpotSign = this.add.sprite(config.width / 2 - 30, 40,"jackpotSign").setScale(0.5);
+		jackpotAnim = this.add.sprite(config.width / 2 - 30, 38, "jackpot_spritesheet").setScale(0.5);
 		//display game tokens
-		this.tokenLabel = this.add.bitmapText(100, 20, "pixelFont", "Tokens Remaining: " + gameTokens, 32);
+		this.tokenLabel = this.add.bitmapText(50, config.height - 80, "pixelFont", "Tokens Remaining: " + gameTokens, 32);
 
 		//plays pull lever function
 		this.input.on('gameobjectdown', this.pullLever, this);
 		
+		spindle1.alpha = 1;
+		spindle2.alpha = 1;
+		spindle3.alpha = 1;
+
 		spindleAnim1.alpha = 0;
 		spindleAnim2.alpha = 0;
 		spindleAnim3.alpha = 0;
@@ -101,22 +105,22 @@ class Scene2 extends Phaser.Scene
 		//call sound func
 		this.leverPullSound();
 
-		//calls spindle move func
-		this.spindleMove();
+		if(count >= autoWin)
+		{	//when count reaches number without a win, auto win
+			console.log("AUTO WIN");
+			spindle1.y = 140;
+			spindle2.y = 140;
+			spindle3.y = 140;
+		}else
+		{
+			//calls spindle move func
+			this.spindleMove();
+		}
 	}
 
 	spindleAnim()
 	{
-		//play animation and set to visible
-		//manTest.alpha = 1;
-		//manTest2.alpha = 1;
-		//manTest.play("right");
-		//manTest2.play("right");
-		
-		//show anim, play anim
-		spindleAnim1.alpha = 1;
-		spindleAnim2.alpha = 1;
-		spindleAnim3.alpha = 1;
+		//play animation
 		spindleAnim1.play("spindleRun");
 		spindleAnim2.play("spindleRun");
 		spindleAnim3.play("spindleRun");
@@ -134,7 +138,11 @@ class Scene2 extends Phaser.Scene
 			console.log("Spindle Sounds Playing");
 		}
 		//callback func to set the spindle animation strip to invisible
-		spindlesSound.once('complete', function(sound){spindleAnim1.alpha = 0,spindleAnim2.alpha = 0,spindleAnim3.alpha = 0, testImage.aplha = 1, this.jackpot();}, this);
+		spindlesSound.once('complete', function(sound)
+		{
+			spindle1.alpha = 1,	spindle2.alpha = 1,	spindle3.alpha = 1; //reactivate spindles visibility
+			spindleAnim1.alpha = 0,spindleAnim2.alpha = 0,spindleAnim3.alpha = 0, testImage.aplha = 1, this.jackpot();
+		}, this);
 	}
 
 	spindleMove()
@@ -178,19 +186,22 @@ class Scene2 extends Phaser.Scene
 
 		//console.log("y location spindle1 ",spindle2.y);
 		//calc spindle movement
-		spindle1.y -= Phaser.Math.Between(1,4)*50;
-		spindle2.y += Phaser.Math.Between(1,4)*50;
-		spindle3.y -= Phaser.Math.Between(1,4)*50;
+		spindle1.y -= Phaser.Math.Between(1,5)*40;
+		spindle2.y += Phaser.Math.Between(1,5)*40;
+		spindle3.y -= Phaser.Math.Between(1,5)*40;
 		//check if off screen and move.
-		if(spindle1.y < 160){
-			spindle1.y = 450;
+		if(spindle1.y < 100){
+			spindle1.y = 390;
 		}
-		if(spindle2.y > 450){
-			spindle2.y = 150;
+		if(spindle2.y > 390){
+			spindle2.y = 140;
 		}
-		if(spindle3.y < 160){
-			spindle3.y = 450;
+		if(spindle3.y < 100){
+			spindle3.y = 390;
 		}
+
+		console.log("Count: ", count);
+
 	}
 
 	leverPullSound()
@@ -202,6 +213,14 @@ class Scene2 extends Phaser.Scene
 		{		
 			console.log("playing sound");
 			testImage.alpha = 0.5;
+			//set spindles to invisible
+			spindle1.alpha = 0;
+			spindle2.alpha = 0;
+			spindle3.alpha = 0;
+			//show question mark spindles
+			spindleAnim1.alpha = 1;
+			spindleAnim2.alpha = 1;
+			spindleAnim3.alpha = 1;
 		}
 		leverPull.once('complete', function(sound){console.log("lever pull sound complete"), this.spindleAnim();}, this);
 	}
@@ -209,11 +228,7 @@ class Scene2 extends Phaser.Scene
 	jackpotSound()
 	{
 		jackpotSound.play();
-		
-		jackpotSign.setTint(0xff0000);
-		jackpotSign.setTint(0xffff00);
-		jackpotSign.setTint(0xff0000);
-		jackpotSign.setTint(0xffff00);
+		jackpotAnim.play("jackPot");
 	}
 
 	jackpot()
@@ -228,11 +243,14 @@ class Scene2 extends Phaser.Scene
 			this.tokenLabel.text = "Tokens Remaining: " + gameTokens;
 			this.jackpotSound();//play sound and display sign
 			testImage.alpha = 1;
+			count = 0; //reset count if win triggered
 			jackpotSound.once('complete', function(sound) {console.log("Jackpot Calculated");});
 		}else
 		{
 			console.log("No Jackpot");
 			testImage.alpha = 1;
+			console.log(spindle1.y, spindle2.y, spindle3.y);
+			count++; //no win count for AUTO WIN condition
 		}
 	}
 
