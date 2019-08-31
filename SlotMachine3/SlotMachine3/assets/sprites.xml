@@ -1,4 +1,0 @@
-<TextureAtlas imagePath="sprites.png">
-	<SubTexture name="Slot_Machine_Base.png" x="0" y="0" width="793" height="850"/>
-	<SubTexture name="Spindle_Icons.png" x="0" y="852" width="117" height="1029"/>
-</TextureAtlas>
