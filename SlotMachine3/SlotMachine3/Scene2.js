@@ -69,9 +69,9 @@ class Scene2 extends Phaser.Scene
 		spindleAnim2 = this.add.sprite(config.width / 2 - 30, config.height / 2 - 7.5, "spindle").setScale(0.5);
 		spindleAnim3 = this.add.sprite(config.width / 2 + 57, config.height / 2 - 7.5, "spindle").setScale(0.5);
 		//spindle strips
-		spindle1 = this.add.sprite(config.width / 2 - 118, config.height / 2 - 7.5, "spindleStrip").setScale(0.5);
-		spindle2 = this.add.sprite(config.width / 2 - 30, config.height / 2 - 7.5, "spindleStrip").setScale(0.5);
-		spindle3 = this.add.sprite(config.width / 2 + 57, config.height / 2 - 7.5, "spindleStrip").setScale(0.5);
+		spindle1 = this.add.sprite(config.width / 2 - 118, config.height / 2 + 7.5, "spindleStrip").setScale(0.5);
+		spindle2 = this.add.sprite(config.width / 2 - 30, config.height / 2 + 7.5, "spindleStrip").setScale(0.5);
+		spindle3 = this.add.sprite(config.width / 2 + 57, config.height / 2 + 7.5, "spindleStrip").setScale(0.5);
 		//clickable star
 		testImage = this.add.sprite(config.width/2 + 167, 130, "star").setInteractive();
 		//main images
@@ -184,18 +184,18 @@ class Scene2 extends Phaser.Scene
 		}*/
 
 		//calc spindle movement
-		spindle1.y -= Phaser.Math.Between(1,5)*40;
-		spindle2.y -= Phaser.Math.Between(1,5)*40;
-		spindle3.y -= Phaser.Math.Between(1,5)*40;
+		spindle1.y -= Phaser.Math.Between(1,4)*50;
+		spindle2.y += Phaser.Math.Between(1,4)*50;
+		spindle3.y -= Phaser.Math.Between(1,4)*50;
 		//check if off screen and move.
 		if(spindle1.y < 100){
-			spindle1.y = 390;
+			spindle1.y = 350;
 		}
-		if(spindle2.y > 100){
-			spindle2.y = 390;
+		if(spindle2.y > 350){
+			spindle2.y = 100;
 		}
 		if(spindle3.y < 100){
-			spindle3.y = 390;
+			spindle3.y = 350;
 		}
 
 		console.log("Count: ", count);
