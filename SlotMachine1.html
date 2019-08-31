@@ -1,0 +1,189 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8"/>
+	<title>SlotMachine-1</title>
+	<script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
+	<style type="text/css">
+		body { margin: 0; }
+	</style>
+</head>
+<body>
+
+<button onclick="pullLever()">Pull Lever </button>
+
+<script type="text/javascript">
+
+	var config =
+	{
+		type: Phaser.AUTO, //set to AUTO to allow for attempted use of WebGL if browser allows
+		width: 800, //canvas sizes
+		height: 600, //cs
+
+		physics: { //tell Phaser to use physics
+			default: 'arcade',
+			arcade: {
+				gravity: { y: 300 }, //global gravity
+				debug: false
+			}
+		},
+
+		scene:
+		{
+			preload: preload,
+			create: create,
+			update: update
+		},
+		audio: {
+			disableWebAudio: true
+		}
+
+	};
+
+	//variables
+	var credits = 100; //game tokens
+	var gameTokensText; //screen text
+	var jackpotAmount = 500;
+	var tumblersSpinning = false; //to not allow lever to be pulled when spinning
+	
+	var number1; //random number values
+	var number1Text;
+	var number2;
+	var number2Text;
+	var number3;
+	var number3Text;
+
+
+	var gameOverText;
+	var gameOver = false;
+
+	var mouse;
+
+	var game = new Phaser.Game(config); //instance assigned to local variable 'game'
+
+	function preload() {
+		//load game assets here
+		this.load.audio('backgroundAudio', 'assets/loop_smooth_jazz.mp3');
+		this.load.image('star', 'assets/tutorial/star.png');
+
+	}
+
+	function create() {
+		//create game sprites here, set anchor points etc.
+
+		var music = this.sound.add('backgroundAudio');
+		var musicLoop = this.sound.add('backgroundAudio', {loop: true});
+		let loopDelay = undefined;
+
+		var star = this.add.sprite(400, 300, 'star').setInteractive();
+
+		star.on('pointerdown',
+			function() {
+				console.log('clicked');
+			});
+
+		star.on('pointerup',
+			function() {
+				console.log('unclicked');
+			});
+
+		music.on('play',() => {
+
+			loopDelay = this.time.delayedCall(300,
+				() => {
+					musicLoop.play();
+				});
+		});
+
+//		if (this.sound.context.state === 'running') {
+//			music.play();
+//		}
+
+
+		//game token text
+		gameTokensText = this.add.text(16, 16, 'Tokens 0', { fontSize: '32px', fill: '#FFF' });
+
+		//random numbers generation
+		number1 = Phaser.Math.Between(1, 9);
+		console.log(number1);
+		number2 = Phaser.Math.Between(1, 9);
+		console.log(number2);
+		number3 = Phaser.Math.Between(1, 9);
+		console.log(number3);
+
+		number1Text = this.add.text(70, 200, 'Random number', { fontSize: '32px', fill: '#FFF' });
+		number2Text = this.add.text(100, 200, 'Random number', { fontSize: '32px', fill: '#FFF' });
+		number3Text = this.add.text(130, 200, 'Random number', { fontSize: '32px', fill: '#FFF' });
+
+
+//			this.input.on('pointerDown',function(pointer) {
+//					console.log('down');
+//				});
+		//mouse = this.input.mousedown.keypress();
+
+		//game.canvas.addEventListener('mouseDown', function(event) { console.log('down'); });
+
+		mouse = this.input.keyboard.createCursorKeys();
+
+		this.events.on('PlayMusic', ()=>
+		{
+			loopDelay.destroy();
+			musicLoop.stop();
+			music.stop();
+			music.play();
+		});
+
+
+	}
+
+	function update() 
+	{
+		//update canvas here
+		number1Text.setText(number1);
+		number2Text.setText(number2);
+		number3Text.setText(number3);
+
+		gameTokensText.setText('Tokens: ' + credits);
+
+		if (mouse.up.isDown) 
+		{
+			console.log('pressed');
+			pullLever();
+		}
+
+		if (credits === 0) {
+			console.log('endgame called');
+			//endGame();
+		}
+
+		if (number1 === number2 && number1 === number3) {
+			console.log('jackpot');
+			credits += jackpotAmount;
+			gameTokensText.setText('Tokens: ' + credits);
+		}
+
+
+	}
+
+	function pullLever() 
+	{
+		//random numbers generation
+		number1 = Phaser.Math.Between(1, 9);
+		number2 = Phaser.Math.Between(1, 9);
+		number3 = Phaser.Math.Between(1, 9);
+		console.log(number1, number2, number3);
+
+		credits -= 1;
+
+	}
+
+	function endGame() 
+	{
+		gameTokensText.setText('Tokens: ' + credits);
+		gameOver = true;
+		gameOverText = this.add.text(300,300,'Game Over',{ fontSize: '40px', fill: '#000' });
+	}
+
+</script>
+</html>

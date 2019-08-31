@@ -1,0 +1,191 @@
+﻿<!DOCTYPE html> 
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8"/>
+	<title>Making your first Phaser 3 Game - Part 1</title>
+	<script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
+	<style type="text/css">
+		body {
+			margin: 0;
+		}
+	</style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+	var config = {
+		type: Phaser.AUTO, //set to AUTO to allow for attempted use of WebGL if browser allows
+		width: 800, //canvas sizes
+		height: 600, //cs
+
+		physics: { //tell Phaser to use physics
+			default: 'arcade',
+			arcade: {
+				gravity: {y: 300}, //global gravity
+				debug: false
+			}
+		},
+
+		scene: {
+			preload: preload,
+			create: create,
+			update: update
+		}
+	};
+
+	var player;
+	var platforms;
+	var stars;
+	var bombs;
+	var score = 0;
+	var scoreText;
+	var gameOverText;
+	var gameOver = false;
+	
+	//input
+	var cursors;
+
+
+
+	var jumpValue = -330;
+	
+	var game = new Phaser.Game(config); //instance assigned to local variable 'game'
+
+	function preload() //load assets for the game
+	{
+		this.load.image('sky', 'assets/tutorial/sky.png');
+		this.load.image('ground', 'assets/tutorial/platform.png');
+		this.load.image('star', 'assets/tutorial/star.png');
+		this.load.image('bomb', 'assets/tutorial/bomb.png');
+		this.load.spritesheet('dude',
+			'assets/tutorial/dude.png',
+			{frameWidth:32, frameHeight:48});
+	}
+
+	function create() 
+	{ //order in which images are created is the order in which they are drawn on screen.  Background image should always go first
+		
+		this.add.image(400, 300, 'sky'); //in phaser 3 all game objects are positioned based on their centre by default
+
+		platforms = this.physics.add.staticGroup(); //creates a static grouping so that they wont move based on arcade physics
+
+		platforms.create(400, 568, 'ground').setScale(2).refreshBody(); //floor scaled to x2. Must be refreshed to inform physics of the change in size
+		platforms.create(600, 400, 'ground');
+		platforms.create(50, 250, 'ground');
+		platforms.create(750, 220, 'ground');
+
+		//create stars group
+		stars = this.physics.add.group({
+			key: 'star',
+			repeat: 11, //creates a total of 12 child objects
+			setXY: { x: 12, y: 0, stepX: 70 } //places stars at stepX:70 apart from each other with first at x:12, second x:82 etc..
+		});
+
+		stars.children.iterate(function(child) //iterate through all children of group and randomly assign a y value
+		{
+			child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+		});
+
+		bombs = this.physics.add.group();
+
+		player = this.physics.add.sprite(100, 450, 'dude'); //create sprite called player as a dynamic body
+
+		player.setBounce(0.2); //slight landing bounce value
+		player.setCollideWorldBounds(true); //collide with the world bounds (800x600)
+
+		//create scoreText (16x16 is coord to display text).  Can specify a text font here as well if wanted
+		scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+		
+		//create animations which can be applied to as many game objects as wanted (phaser 3 improvement)
+		this.anims.create({ //animation for left movement
+			key: 'left',
+			frames: this.anims.generateFrameNumbers('dude',{ start:0, end:3}), //sets sprites from sheet
+			frameRate: 10, //speed of movement
+			repeat: -1 //loop animation
+		});
+		this.anims.create({ //turn animation
+			key: 'turn',
+			frames: [{key: 'dude', frame: 4}],
+			frameRate:20
+		});
+		this.anims.create({ //animation for right movement
+			key: 'right',
+			frames: this.anims.generateFrameNumbers('dude',{ start:5, end:8}),
+			frameRate: 10,
+			repeat: -1
+		});
+		
+		this.physics.add.collider(player, platforms); //sets the collision between player and platform
+		this.physics.add.collider(stars, platforms); //collision check with stars and platforms
+		this.physics.add.collider(bombs, platforms); //bomb collision with ground
+		this.physics.add.collider(player, bombs, hitBomb, null, this); //calls hitBomb func if player and bomb collide
+
+		cursors = this.input.keyboard.createCursorKeys(); //populate cursor object with up, down, left, right
+
+		this.physics.add.overlap(player, stars, collectStar, null, this); //check if player overlaps star and call collectStar func
+
+	}
+
+	function update() 
+	{
+		//movement checks
+		if (cursors.left.isDown) {
+			player.setVelocityX(-160);
+			player.anims.play('left', true);
+		}
+		else if (cursors.right.isDown) {
+			player.setVelocityX(160)
+			player.anims.play('right', true);
+		} else {
+			player.setVelocityX(0);
+			player.anims.play('turn');
+		}
+
+		if (cursors.up.isDown && player.body.touching.down) //check if up button is pressed and player is on the ground to stop midair jumps
+		{
+			player.setVelocityY(jumpValue);
+		}
+		
+	}
+
+	function collectStar(player, star) 
+	{
+		star.disableBody(true, true); //disable game object child star that has overlapped with player
+		score += 10;
+		scoreText.setText('Score: ' + score);
+
+		if (stars.countActive(true) === 0) // use this countActive group to check stars
+		{
+			stars.children.iterate(function(child) //regen stars falling from y:0
+			{
+				child.enableBody(true, child.x, 0, true, true);
+			});
+
+			//choose a random x coord for bomb placement based on player position
+			var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+
+			var bomb = bombs.create(x, 16, 'bomb'); //create bomb
+			bomb.setBounce(1); //bounce
+			bomb.setCollideWorldBounds(true); //collide with world	
+			bomb.setVelocity(Phaser.Math.Between(-200, 200), 20); //random velocity
+
+		}
+	}
+
+	function hitBomb(player, bombs) 
+	{
+		this.physics.pause(); //pause game
+		player.setTint(0xff0000); //tint player red
+		player.anims.play('turn');
+
+		gameOver = true;
+
+		gameOverText = this.add.text(300,300,'Game Over',{ fontSize: '40px', fill: '#000' });
+	}
+	
+</script>
+
+</body>
+</html>
