@@ -1,7 +1,7 @@
 // JavaScript source code
 
 //image variables
-var testImage;
+var testImage; //using the star as a point to click.
 //var testgroup;
 //var testgroup2;
 //var testgroup3;
@@ -65,9 +65,9 @@ class Scene2 extends Phaser.Scene
 
 		//game objects
 		leverDown = this.add.sprite(config.width / 2 + 165, config.height / 2 + 25, "lever_spritesheet").setScale(0.5);
-		spindleAnim1 = this.add.sprite(config.width / 2 - 120, config.height / 2 - 7.5, "spindle").setScale(0.5);
+		spindleAnim1 = this.add.sprite(config.width / 2 - 118, config.height / 2 - 7.5, "spindle").setScale(0.5);
 		spindleAnim2 = this.add.sprite(config.width / 2 - 30, config.height / 2 - 7.5, "spindle").setScale(0.5);
-		spindleAnim3 = this.add.sprite(config.width / 2 + 55, config.height / 2 - 7.5, "spindle").setScale(0.5);
+		spindleAnim3 = this.add.sprite(config.width / 2 + 57, config.height / 2 - 7.5, "spindle").setScale(0.5);
 		//spindle strips
 		spindle1 = this.add.sprite(config.width / 2 - 118, config.height / 2 - 7.5, "spindleStrip").setScale(0.5);
 		spindle2 = this.add.sprite(config.width / 2 - 30, config.height / 2 - 7.5, "spindleStrip").setScale(0.5);
@@ -84,16 +84,14 @@ class Scene2 extends Phaser.Scene
 		//plays pull lever function
 		this.input.on('gameobjectdown', this.pullLever, this);
 		
+		//set alphas for visibility
 		spindle1.alpha = 1;
 		spindle2.alpha = 1;
 		spindle3.alpha = 1;
-
 		spindleAnim1.alpha = 0;
 		spindleAnim2.alpha = 0;
 		spindleAnim3.alpha = 0;
 
-		//manTest.play("right");
-		//manTest.alpha = 1;
 	}
 
 	pullLever() 
@@ -105,6 +103,7 @@ class Scene2 extends Phaser.Scene
 		//call sound func
 		this.leverPullSound();
 
+		//check for auto win parameters, edit global var in game.js
 		if(count >= autoWin)
 		{	//when count reaches number without a win, auto win
 			console.log("AUTO WIN");
@@ -184,17 +183,16 @@ class Scene2 extends Phaser.Scene
 			console.log("Tween1 ",testgroup.y);
 		}*/
 
-		//console.log("y location spindle1 ",spindle2.y);
 		//calc spindle movement
 		spindle1.y -= Phaser.Math.Between(1,5)*40;
-		spindle2.y += Phaser.Math.Between(1,5)*40;
+		spindle2.y -= Phaser.Math.Between(1,5)*40;
 		spindle3.y -= Phaser.Math.Between(1,5)*40;
 		//check if off screen and move.
 		if(spindle1.y < 100){
 			spindle1.y = 390;
 		}
-		if(spindle2.y > 390){
-			spindle2.y = 140;
+		if(spindle2.y > 100){
+			spindle2.y = 390;
 		}
 		if(spindle3.y < 100){
 			spindle3.y = 390;

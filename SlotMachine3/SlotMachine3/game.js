@@ -4,7 +4,7 @@
 var gameTokens = 50;
 var jackpotTokens = 10;
 var count = 0;
-var autoWin = 1;
+var autoWin = 15;
 
 var config = 
 {
